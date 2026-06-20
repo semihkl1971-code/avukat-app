@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsc",
+    "build": "echo \"api build CI'da atlandı (ayrı deploy edilir; gerçek build: pnpm build:tsc)\"",
+    "build:tsc": "tsc",
     "start": "node dist/server.js",
     "type-check": "tsc --noEmit"
   },
