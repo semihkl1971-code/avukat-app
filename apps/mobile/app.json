@@ -1,0 +1,44 @@
+{
+  "expo": {
+    "name": "Avukatım",
+    "slug": "avukatim",
+    "version": "1.0.0",
+    "jsEngine": "jsc",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#4338ca"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.avukatim.mobile"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#4338ca"
+      },
+      "package": "com.avukatim.mobile"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#4338ca"
+        }
+      ]
+    ],
+    "scheme": "avukatim",
+    "extra": {
+      "eas": {
+        "projectId": "your-eas-project-id"
+      }
+    }
+  }
+}

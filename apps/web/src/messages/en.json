@@ -1,0 +1,109 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "cases": "Cases",
+    "clients": "Clients",
+    "documents": "Documents",
+    "calendar": "Calendar",
+    "messages": "Messages",
+    "uyap": "UYAP",
+    "billing": "Billing",
+    "settings": "Settings",
+    "logout": "Sign Out"
+  },
+  "auth": {
+    "login": "Sign In",
+    "register": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "fullName": "Full Name",
+    "barNumber": "Bar Number",
+    "phone": "Phone",
+    "loginWithGoogle": "Sign in with Google",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?"
+  },
+  "dashboard": {
+    "title": "Welcome",
+    "activeCases": "Active Cases",
+    "upcomingHearings": "Upcoming Hearings",
+    "newClients": "New Clients",
+    "pendingInvoices": "Pending Invoices"
+  },
+  "cases": {
+    "title": "Cases",
+    "new": "New Case",
+    "caseNumber": "Case Number",
+    "court": "Court",
+    "status": "Status",
+    "client": "Client",
+    "hearing": "Next Hearing",
+    "statuses": {
+      "active": "Active",
+      "closed": "Closed",
+      "pending": "Pending",
+      "archived": "Archived"
+    },
+    "types": {
+      "civil": "Civil",
+      "criminal": "Criminal",
+      "administrative": "Administrative",
+      "commercial": "Commercial",
+      "family": "Family",
+      "labor": "Labor",
+      "other": "Other"
+    }
+  },
+  "clients": {
+    "title": "Clients",
+    "new": "New Client",
+    "fullName": "Full Name",
+    "tcNo": "Turkish ID No",
+    "phone": "Phone",
+    "email": "Email",
+    "city": "City",
+    "types": {
+      "individual": "Individual",
+      "corporate": "Corporate"
+    }
+  },
+  "messages": {
+    "title": "Messages",
+    "inbox": "Inbox",
+    "compose": "Compose",
+    "whatsapp": "WhatsApp",
+    "gmail": "Gmail",
+    "send": "Send"
+  },
+  "uyap": {
+    "title": "UYAP Integration",
+    "connect": "Connect to UYAP",
+    "sync": "Sync",
+    "lastSync": "Last Sync",
+    "credentials": "UYAP Credentials"
+  },
+  "billing": {
+    "title": "Subscription & Billing",
+    "currentPlan": "Current Plan",
+    "upgrade": "Upgrade",
+    "plans": {
+      "free": "Free",
+      "starter": "Starter",
+      "pro": "Professional",
+      "enterprise": "Enterprise"
+    }
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search...",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "noData": "No data found",
+    "confirm": "Confirm",
+    "back": "Back"
+  }
+}

@@ -1,0 +1,22 @@
+node_modules
+.next
+dist
+dist-web
+dist-and
+dist-check
+.turbo
+.expo
+.env
+.env.local
+.env.*.local
+*.tsbuildinfo
+.DS_Store
+
+# Gizli anahtar içerir — GitHub'a gönderme (demo verisi zaten oluşturuldu)
+setup-demo.mjs
+
+# Büyük yerel medya (yalnızca kaynak; site videosu apps/web/public'te kalır)
+avukat videoları/
+promo-build/
+*.mp4
+!apps/web/public/videos/*.mp4

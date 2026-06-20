@@ -1,0 +1,109 @@
+{
+  "nav": {
+    "dashboard": "Panel",
+    "cases": "Davalar",
+    "clients": "Müvekkiller",
+    "documents": "Belgeler",
+    "calendar": "Takvim",
+    "messages": "Mesajlar",
+    "uyap": "UYAP",
+    "billing": "Abonelik",
+    "settings": "Ayarlar",
+    "logout": "Çıkış"
+  },
+  "auth": {
+    "login": "Giriş Yap",
+    "register": "Kayıt Ol",
+    "email": "E-posta",
+    "password": "Şifre",
+    "fullName": "Ad Soyad",
+    "barNumber": "Baro Sicil No",
+    "phone": "Telefon",
+    "loginWithGoogle": "Google ile Giriş",
+    "noAccount": "Hesabınız yok mu?",
+    "hasAccount": "Zaten hesabınız var mı?"
+  },
+  "dashboard": {
+    "title": "Hoş Geldiniz",
+    "activeCases": "Aktif Davalar",
+    "upcomingHearings": "Yaklaşan Duruşmalar",
+    "newClients": "Yeni Müvekkiller",
+    "pendingInvoices": "Bekleyen Faturalar"
+  },
+  "cases": {
+    "title": "Davalar",
+    "new": "Yeni Dava",
+    "caseNumber": "Esas No",
+    "court": "Mahkeme",
+    "status": "Durum",
+    "client": "Müvekkil",
+    "hearing": "Sonraki Duruşma",
+    "statuses": {
+      "active": "Aktif",
+      "closed": "Kapandı",
+      "pending": "Beklemede",
+      "archived": "Arşivlendi"
+    },
+    "types": {
+      "civil": "Hukuk",
+      "criminal": "Ceza",
+      "administrative": "İdare",
+      "commercial": "Ticaret",
+      "family": "Aile",
+      "labor": "İş",
+      "other": "Diğer"
+    }
+  },
+  "clients": {
+    "title": "Müvekkiller",
+    "new": "Yeni Müvekkil",
+    "fullName": "Ad Soyad",
+    "tcNo": "TC Kimlik No",
+    "phone": "Telefon",
+    "email": "E-posta",
+    "city": "Şehir",
+    "types": {
+      "individual": "Bireysel",
+      "corporate": "Kurumsal"
+    }
+  },
+  "messages": {
+    "title": "Mesajlar",
+    "inbox": "Gelen Kutusu",
+    "compose": "Yeni Mesaj",
+    "whatsapp": "WhatsApp",
+    "gmail": "Gmail",
+    "send": "Gönder"
+  },
+  "uyap": {
+    "title": "UYAP Entegrasyonu",
+    "connect": "UYAP'a Bağlan",
+    "sync": "Senkronize Et",
+    "lastSync": "Son Senkronizasyon",
+    "credentials": "UYAP Kimlik Bilgileri"
+  },
+  "billing": {
+    "title": "Abonelik ve Ödeme",
+    "currentPlan": "Mevcut Plan",
+    "upgrade": "Yükselt",
+    "plans": {
+      "free": "Ücretsiz",
+      "starter": "Başlangıç",
+      "pro": "Profesyonel",
+      "enterprise": "Kurumsal"
+    }
+  },
+  "common": {
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "delete": "Sil",
+    "edit": "Düzenle",
+    "search": "Ara...",
+    "loading": "Yükleniyor...",
+    "error": "Hata oluştu",
+    "success": "Başarılı",
+    "noData": "Veri bulunamadı",
+    "confirm": "Onayla",
+    "back": "Geri"
+  }
+}
