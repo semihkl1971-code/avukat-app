@@ -20,3 +20,5 @@ avukat videoları/
 promo-build/
 *.mp4
 !apps/web/public/videos/*.mp4
+
+.vercel
