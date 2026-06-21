@@ -3,7 +3,10 @@ import Stripe from 'stripe'
 import { createClient } from '@/lib/supabase/server'
 import crypto from 'crypto'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
+function getStripe(): Stripe | null {
+  const key = process.env.STRIPE_SECRET_KEY
+  return key ? new Stripe(key) : null
+}
 
 const TIER_MAP: Record<string, string> = {
   [process.env.STRIPE_PRICE_STARTER ?? '']: 'starter',
@@ -28,6 +31,8 @@ export async function POST(request: NextRequest) {
 }
 
 async function handleStripeWebhook(body: string, signature: string) {
+  const stripe = getStripe()
+  if (!stripe) return NextResponse.json({ error: 'Stripe yapılandırılmamış' }, { status: 503 })
   let event: Stripe.Event
 
   try {

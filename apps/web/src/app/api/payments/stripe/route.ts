@@ -2,15 +2,21 @@ import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { createClient } from '@/lib/supabase/server'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
+// Lazy: anahtar yoksa modül yüklenirken patlamasın (build/deploy bozulmasın)
+function getStripe(): Stripe | null {
+  const key = process.env.STRIPE_SECRET_KEY
+  return key ? new Stripe(key) : null
+}
 
-const PRICE_IDS: Record<string, string> = {
-  starter: process.env.STRIPE_PRICE_STARTER!,
-  pro: process.env.STRIPE_PRICE_PRO!,
-  enterprise: process.env.STRIPE_PRICE_ENTERPRISE!,
+const PRICE_IDS: Record<string, string | undefined> = {
+  starter: process.env.STRIPE_PRICE_STARTER,
+  pro: process.env.STRIPE_PRICE_PRO,
+  enterprise: process.env.STRIPE_PRICE_ENTERPRISE,
 }
 
 export async function POST(request: NextRequest) {
+  const stripe = getStripe()
+  if (!stripe) return NextResponse.json({ error: 'Stripe yapılandırılmamış (global ödeme için STRIPE_SECRET_KEY gerekir).' }, { status: 503 })
   const { tier } = await request.json() as { tier: string }
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
