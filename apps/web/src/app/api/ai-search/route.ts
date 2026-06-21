@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { createClient as createSbClient } from '@supabase/supabase-js'
 
 export const runtime = 'nodejs'
-export const maxDuration = 120
+export const maxDuration = 60
 
 // Mobil uygulamadan (farklı origin) erişim için CORS
 const CORS = {
