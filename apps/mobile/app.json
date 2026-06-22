@@ -36,9 +36,18 @@
     ],
     "scheme": "avukatim",
     "extra": {
+      "router": {
+        "origin": false
+      },
       "eas": {
-        "projectId": "your-eas-project-id"
+        "projectId": "f0806be5-8a50-42cb-a334-9c4035c484f3"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/f0806be5-8a50-42cb-a334-9c4035c484f3"
     }
   }
 }

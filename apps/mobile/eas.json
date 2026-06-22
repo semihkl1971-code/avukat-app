@@ -1,0 +1,41 @@
+{
+  "cli": {
+    "version": ">= 12.0.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "channel": "preview",
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_SUPABASE_URL": "https://nhkxesbykmuwtotrgsqj.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_66an5l5iWWjzLFBMVm0mOQ_0LlZSsRu",
+        "EXPO_PUBLIC_API_URL": "https://avukat-web-avukat1.vercel.app"
+      }
+    },
+    "production": {
+      "channel": "production",
+      "android": {
+        "buildType": "app-bundle"
+      },
+      "env": {
+        "EXPO_PUBLIC_SUPABASE_URL": "https://nhkxesbykmuwtotrgsqj.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_66an5l5iWWjzLFBMVm0mOQ_0LlZSsRu",
+        "EXPO_PUBLIC_API_URL": "https://avukat-web-avukat1.vercel.app"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
