@@ -32,7 +32,8 @@
           "icon": "./assets/notification-icon.png",
           "color": "#4338ca"
         }
-      ]
+      ],
+      "expo-asset"
     ],
     "scheme": "avukatim",
     "extra": {
