@@ -20,6 +20,7 @@
     "appId": "com.avukatim.app",
     "productName": "Avukatım",
     "copyright": "© 2026 Avukatım",
+    "npmRebuild": false,
     "directories": {
       "output": "dist",
       "buildResources": "build"
