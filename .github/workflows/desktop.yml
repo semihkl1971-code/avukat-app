@@ -1,0 +1,63 @@
+name: Masaüstü Uygulaması (Win/Mac/Linux)
+
+# Sürüm etiketi push edilince (örn. git tag desktop-v1.0.0) veya elle çalıştırınca derler.
+on:
+  push:
+    tags:
+      - 'desktop-v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            platform: win
+          - os: macos-latest
+            platform: mac
+          - os: ubuntu-latest
+            platform: linux
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: desktop
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Bağımlılıkları kur
+        run: npm install
+
+      - name: Derle (${{ matrix.platform }})
+        run: npm run dist:${{ matrix.platform }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Kurulum dosyalarını yükle (artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: avukatim-${{ matrix.platform }}
+          path: |
+            desktop/dist/*.exe
+            desktop/dist/*.dmg
+            desktop/dist/*.AppImage
+            desktop/dist/*.zip
+          if-no-files-found: ignore
+
+      - name: Sürüm (Release) oluştur / dosya ekle
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            desktop/dist/*.exe
+            desktop/dist/*.dmg
+            desktop/dist/*.AppImage
+          fail_on_unmatched_files: false
