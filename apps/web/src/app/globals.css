@@ -45,6 +45,21 @@ html { scroll-behavior: smooth; }
 a, button, [role="button"], input, select, textarea { -webkit-tap-highlight-color: transparent; }
 a, button, [role="button"] { transition: color .2s ease, background-color .2s ease, border-color .2s ease, opacity .2s ease, transform .2s ease; }
 
+/* Panel (dashboard) form alanları — koyu temaya uy (beyaz input kalmasın) */
+.dash-scope input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+.dash-scope select,
+.dash-scope textarea {
+  background-color: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.12);
+  color: #e8eaf0;
+}
+.dash-scope input::placeholder,
+.dash-scope textarea::placeholder { color: #6b7280; }
+.dash-scope select option { background-color: #0e1019; color: #e8eaf0; }
+.dash-scope input:focus,
+.dash-scope select:focus,
+.dash-scope textarea:focus { border-color: rgba(139,128,255,0.6); outline: none; }
+
 /* Hareketi azalt tercihi (skill: reduced-motion) — sonsuz/süslü animasyonları sakinleştir */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

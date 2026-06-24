@@ -25,7 +25,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       <Sidebar profile={profile} />
       <div className="flex-1 flex flex-col overflow-hidden">
         <TopBar user={user} profile={profile} />
-        <main className="flex-1 overflow-y-auto p-6" style={{ background: 'radial-gradient(900px 400px at 50% -10%, rgba(108,99,255,0.07), transparent), #07090f', color: '#e8eaf0' }}>
+        <main className="dash-scope flex-1 overflow-y-auto p-6" style={{ background: 'radial-gradient(900px 400px at 50% -10%, rgba(108,99,255,0.07), transparent), #07090f', color: '#e8eaf0' }}>
           {children}
         </main>
       </div>
