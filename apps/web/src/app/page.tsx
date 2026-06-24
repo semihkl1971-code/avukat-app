@@ -178,12 +178,12 @@ export default function LandingPage() {
           </div>
           <div className="nav-links" style={{ display: 'flex', gap: 4 }}>
             {[['AI Asistan', '#ai-demo'], ['Özellikler', '#features'], ['Videolar', '#videos'], ['Fiyatlar', '#pricing'], ['SSS', '#faq']].map(([l, h]) => (
-              <a key={l} href={h} style={{ padding: '6px 14px', borderRadius: 8, color: '#9ca3af', textDecoration: 'none', fontSize: 14, fontWeight: 500 }}>{l}</a>
+              <a key={l} href={h} className="nav-link" style={{ padding: '6px 14px', borderRadius: 8, color: '#9ca3af', textDecoration: 'none', fontSize: 14, fontWeight: 500 }}>{l}</a>
             ))}
           </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <Link href="/login" className="la-btn-anim" style={{ padding: '8px 18px', borderRadius: 8, color: '#9ca3af', textDecoration: 'none', fontSize: 14 }}>Giriş</Link>
+          <Link href="/login" className="nav-link" style={{ padding: '8px 18px', borderRadius: 8, color: '#9ca3af', textDecoration: 'none', fontSize: 14 }}>Giriş</Link>
           <Link href="/register" className="la-btn-anim la-btn-pulse" style={{ padding: '8px 18px', borderRadius: 8, background: 'linear-gradient(135deg,#6c63ff,#a855f7)', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 600 }}>Ücretsiz Başla</Link>
         </div>
       </nav>
@@ -582,6 +582,10 @@ export default function LandingPage() {
 
       <style>{`
         html { scroll-behavior: smooth; }
+        .nav-link { position: relative; transition: color .2s ease, background-color .2s ease; }
+        .nav-link:hover { color: #fff !important; background: rgba(255,255,255,0.06); }
+        .nav-link::after { content: ''; position: absolute; left: 14px; right: 14px; bottom: 2px; height: 2px; border-radius: 2px; background: linear-gradient(90deg,#6c63ff,#a855f7); transform: scaleX(0); transform-origin: left; transition: transform .25s ease; }
+        .nav-link:hover::after { transform: scaleX(1); }
         @media (max-width: 860px) {
           .nav-links { display: none !important; }
           .feature-row { grid-template-columns: 1fr !important; }

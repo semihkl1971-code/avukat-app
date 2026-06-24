@@ -14,3 +14,43 @@
     @apply bg-gray-50 text-gray-900 font-sans;
   }
 }
+
+/* ============================================================
+   Profesyonel cilalama katmanı — tüm site (landing + panel + giriş)
+   ============================================================ */
+
+/* Net font render + akıcı kaydırma */
+* { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
+html { scroll-behavior: smooth; }
+
+/* Marka metin seçim rengi */
+::selection { background: rgba(108, 99, 255, 0.38); color: #fff; }
+
+/* Koyu temaya uygun ince, markalı kaydırma çubuğu */
+::-webkit-scrollbar { width: 11px; height: 11px; }
+::-webkit-scrollbar-track { background: #0a0c14; }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #3a3760, #2a2745);
+  border-radius: 10px;
+  border: 2px solid #0a0c14;
+}
+::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #6c63ff, #a855f7); }
+* { scrollbar-width: thin; scrollbar-color: #3a3760 #0a0c14; }
+
+/* Erişilebilirlik (skill #1): klavye odak halkası — fareyle tıklamada görünmez */
+:focus-visible { outline: 2px solid #8b80ff; outline-offset: 2px; border-radius: 5px; }
+:focus:not(:focus-visible) { outline: none; }
+
+/* Tıklanabilir öğelerde mavi dokunma vurgusunu kaldır (mobil cila) */
+a, button, [role="button"], input, select, textarea { -webkit-tap-highlight-color: transparent; }
+a, button, [role="button"] { transition: color .2s ease, background-color .2s ease, border-color .2s ease, opacity .2s ease, transform .2s ease; }
+
+/* Hareketi azalt tercihi (skill: reduced-motion) — sonsuz/süslü animasyonları sakinleştir */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+}
