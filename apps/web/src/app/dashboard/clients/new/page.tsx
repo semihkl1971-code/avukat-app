@@ -11,7 +11,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-lg text-sm font-medium transition disabled:opacity-60"
+      className="bg-violet-600 hover:bg-violet-700 text-white px-6 py-2.5 rounded-lg text-sm font-medium transition disabled:opacity-60"
     >
       {pending ? 'Kaydediliyor...' : 'Müvekkili Kaydet'}
     </button>
@@ -19,7 +19,7 @@ function SubmitButton() {
 }
 
 const labelCls = 'block text-xs font-semibold text-gray-500 mb-1.5'
-const inputCls = 'w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500'
+const inputCls = 'w-full border border-white/10 rounded-lg px-3 py-2 text-sm text-gray-100 focus:outline-none focus:ring-2 focus:ring-violet-500'
 
 export default function NewClientPage() {
   const [state, formAction] = useActionState<FormState, FormData>(createClientRecord, {})
@@ -27,16 +27,16 @@ export default function NewClientPage() {
   return (
     <div className="max-w-2xl space-y-5">
       <div className="flex items-center gap-2 text-sm text-gray-500">
-        <Link href="/dashboard/clients" className="hover:text-indigo-600">Müvekkiller</Link>
+        <Link href="/dashboard/clients" className="hover:text-violet-300">Müvekkiller</Link>
         <span>/</span>
-        <span className="text-gray-900">Yeni Müvekkil</span>
+        <span className="text-gray-100">Yeni Müvekkil</span>
       </div>
 
-      <h2 className="text-2xl font-serif font-bold text-gray-900">Yeni Müvekkil Ekle</h2>
+      <h2 className="text-2xl font-serif font-bold text-gray-100">Yeni Müvekkil Ekle</h2>
 
-      <form action={formAction} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-5">
+      <form action={formAction} className="bg-[#0e1019] rounded-xl shadow-sm border border-white/10 p-6 space-y-5">
         {state.error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-2.5 text-sm">
+          <div className="bg-red-500/10 border border-red-200 text-red-300 rounded-lg px-4 py-2.5 text-sm">
             ⚠ {state.error}
           </div>
         )}
@@ -83,9 +83,9 @@ export default function NewClientPage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-3 pt-2 border-t border-gray-100">
+        <div className="flex items-center gap-3 pt-2 border-t border-white/10">
           <SubmitButton />
-          <Link href="/dashboard/clients" className="text-gray-500 hover:text-gray-700 text-sm">İptal</Link>
+          <Link href="/dashboard/clients" className="text-gray-500 hover:text-gray-300 text-sm">İptal</Link>
         </div>
       </form>
     </div>

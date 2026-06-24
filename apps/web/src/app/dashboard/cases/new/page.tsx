@@ -16,15 +16,15 @@ export default async function NewCasePage() {
   return (
     <div className="max-w-2xl space-y-5">
       <div className="flex items-center gap-2 text-sm text-gray-500">
-        <Link href="/dashboard/cases" className="hover:text-indigo-600">Davalar</Link>
+        <Link href="/dashboard/cases" className="hover:text-violet-300">Davalar</Link>
         <span>/</span>
-        <span className="text-gray-900">Yeni Dava</span>
+        <span className="text-gray-100">Yeni Dava</span>
       </div>
 
-      <h2 className="text-2xl font-serif font-bold text-gray-900">Yeni Dava Ekle</h2>
+      <h2 className="text-2xl font-serif font-bold text-gray-100">Yeni Dava Ekle</h2>
 
       {!clients?.length ? (
-        <div className="bg-amber-50 border border-amber-200 text-amber-800 rounded-xl px-5 py-4 text-sm">
+        <div className="bg-amber-500/10 border border-amber-200 text-amber-300 rounded-xl px-5 py-4 text-sm">
           Dava eklemek için önce en az bir müvekkil oluşturmalısınız.{' '}
           <Link href="/dashboard/clients/new" className="font-semibold underline">Müvekkil ekle →</Link>
         </div>

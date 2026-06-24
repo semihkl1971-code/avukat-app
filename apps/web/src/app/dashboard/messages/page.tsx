@@ -13,12 +13,12 @@ export default async function MessagesPage() {
     .limit(50)
 
   const CHANNEL_ICON: Record<string, string> = { whatsapp: '💬', gmail: '📧', sms: '📱' }
-  const DIR_COLOR: Record<string, string> = { inbound: 'text-green-600', outbound: 'text-blue-600' }
+  const DIR_COLOR: Record<string, string> = { inbound: 'text-green-400', outbound: 'text-blue-400' }
 
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-serif font-bold text-gray-900">Mesajlar</h2>
+        <h2 className="text-2xl font-serif font-bold text-gray-100">Mesajlar</h2>
         <div className="flex gap-2">
           <a href="/dashboard/messages/compose?channel=whatsapp" className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
             💬 WhatsApp Gönder
@@ -29,7 +29,7 @@ export default async function MessagesPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-[#0e1019] rounded-xl shadow-sm border border-white/10 overflow-hidden">
         {!messages?.length ? (
           <div className="p-10 text-center text-gray-500">
             <p className="text-4xl mb-3">💬</p>
@@ -37,21 +37,21 @@ export default async function MessagesPage() {
             <p className="text-sm mt-1">WhatsApp veya Gmail entegrasyonunu ayarlardan yapılandırın</p>
           </div>
         ) : (
-          <div className="divide-y divide-gray-100">
+          <div className="divide-y divide-white/10">
             {messages.map((m: Record<string, unknown>) => (
-              <div key={m.id as string} className="flex items-start gap-4 p-4 hover:bg-gray-50 transition">
+              <div key={m.id as string} className="flex items-start gap-4 p-4 hover:bg-white/5 transition">
                 <span className="text-xl">{CHANNEL_ICON[m.channel as string]}</span>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">
-                    <span className="font-medium text-gray-900 text-sm">
+                    <span className="font-medium text-gray-100 text-sm">
                       {(m.clients as Record<string, unknown>)?.full_name as string ?? m.from_address as string ?? 'Bilinmiyor'}
                     </span>
-                    <span className="text-xs text-gray-400">
+                    <span className="text-xs text-gray-500">
                       {new Date(m.created_at as string).toLocaleDateString('tr-TR')}
                     </span>
                   </div>
-                  {m.subject ? <div className="text-xs text-gray-600 mt-0.5">{m.subject as string}</div> : null}
-                  <p className="text-sm text-gray-600 mt-1 truncate">{m.body as string}</p>
+                  {m.subject ? <div className="text-xs text-gray-500 mt-0.5">{m.subject as string}</div> : null}
+                  <p className="text-sm text-gray-500 mt-1 truncate">{m.body as string}</p>
                 </div>
                 <span className={`text-xs font-medium ${DIR_COLOR[m.direction as string]}`}>
                   {m.direction === 'inbound' ? '← Gelen' : '→ Giden'}

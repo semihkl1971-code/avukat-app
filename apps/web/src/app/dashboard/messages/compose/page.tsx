@@ -16,12 +16,12 @@ export default async function ComposePage({ searchParams }: { searchParams: Prom
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center gap-2 text-sm text-gray-400">
-        <Link href="/dashboard/messages" className="hover:text-gray-600">Mesajlar</Link>
+      <div className="flex items-center gap-2 text-sm text-gray-500">
+        <Link href="/dashboard/messages" className="hover:text-gray-500">Mesajlar</Link>
         <span>/</span>
-        <span className="text-gray-600">Yeni Mesaj</span>
+        <span className="text-gray-500">Yeni Mesaj</span>
       </div>
-      <h2 className="text-2xl font-serif font-bold text-gray-900">Yeni Mesaj</h2>
+      <h2 className="text-2xl font-serif font-bold text-gray-100">Yeni Mesaj</h2>
       <ComposeForm clients={clients ?? []} initialChannel={channel ?? 'whatsapp'} />
     </div>
   )
