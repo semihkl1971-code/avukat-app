@@ -1,0 +1,9 @@
+# Web deploy'una gereksiz/büyük dosyalar (Vercel 100MB dosya limiti)
+# desktop/ pnpm workspace dışında, web build'e gerekmez; dist'te 188MB exe var
+desktop
+avukat videoları
+promo-build
+dist-web
+dist-and
+dist-check
+*.zip
