@@ -218,6 +218,8 @@ export default function LandingPage() {
       <section style={{ position: 'relative', minHeight: '92vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 24px', maxWidth: 1100, margin: '0 auto', textAlign: 'center' }}>
         <HeroBackdrop />
         <Hero3D />
+        {/* Metin okunurluğu için merkeze hafif karartma (3D arka plan gözü yormasın) */}
+        <div aria-hidden style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 60% 52% at 50% 42%, rgba(5,6,11,0.78), rgba(5,6,11,0.3) 58%, transparent 80%)', pointerEvents: 'none' }} />
         <div style={{ position: 'relative', zIndex: 1, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(108,99,255,0.1)', border: '1px solid rgba(108,99,255,0.25)', borderRadius: 100, padding: '5px 14px', fontSize: 13, color: '#a89fff', marginBottom: 24 }}>
           🚀 Türkiye'nin #1 Hukuk Bürosu Platformu
@@ -225,8 +227,8 @@ export default function LandingPage() {
         <h1 style={{ fontSize: 'clamp(42px,8vw,86px)', fontWeight: 900, lineHeight: 1.04, letterSpacing: '-2.5px', margin: '0 0 24px', textShadow: '0 4px 60px rgba(108,99,255,0.35)' }}>
           Hukuk Büronuzu<br /><span style={{ background: 'linear-gradient(135deg,#8b80ff,#a855f7,#22d3ee)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Dijitalleştirin</span>
         </h1>
-        <p style={{ fontSize: 'clamp(16px,2.2vw,21px)', color: '#aeb6c6', lineHeight: 1.7, maxWidth: 640, margin: '0 auto 38px', fontWeight: 500 }}>
-          UYAP ile otomatik dava takibi, WhatsApp &amp; Gmail ile müvekkil iletişimi, yapay zeka destekli hukuki araştırma — <span style={{ color: '#e8eaf0', fontWeight: 700 }}>tek platformda.</span>
+        <p style={{ fontSize: 'clamp(17px,2.3vw,22px)', color: '#dde3ee', lineHeight: 1.72, maxWidth: 660, margin: '0 auto 38px', fontWeight: 600, textShadow: '0 2px 16px rgba(0,0,0,0.7)' }}>
+          UYAP ile otomatik dava takibi, WhatsApp &amp; Gmail ile müvekkil iletişimi, yapay zeka destekli hukuki araştırma — <span style={{ color: '#fff', fontWeight: 800 }}>tek platformda.</span>
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 30 }}>
           <Link href="/register" className="la-btn-anim la-btn-pulse" style={{ padding: '16px 34px', borderRadius: 14, background: 'linear-gradient(135deg,#6c63ff,#a855f7)', color: '#fff', textDecoration: 'none', fontSize: 16, fontWeight: 700, boxShadow: '0 8px 32px rgba(108,99,255,0.45)' }}>14 Gün Ücretsiz Dene →</Link>
@@ -421,7 +423,7 @@ export default function LandingPage() {
           </div>
           <div style={{ marginTop: 32, background: 'rgba(108,99,255,0.06)', border: '1px solid rgba(108,99,255,0.15)', borderRadius: 16, padding: '18px 28px', display: 'flex', alignItems: 'center', gap: 18, flexWrap: 'wrap' }}>
             <span style={{ fontSize: 26 }}>🇹🇷</span>
-            <div><div style={{ fontWeight: 700, color: '#e2e8f0', fontSize: 14 }}>Türkiye için PayTR, Global için Stripe</div><div style={{ color: '#6b7280', fontSize: 13, marginTop: 4 }}>Türk avukatlar için TRY cinsinden 3D Secure ödeme. Uluslararası kullanıcılar için USD/EUR.</div></div>
+            <div><div style={{ fontWeight: 700, color: '#e2e8f0', fontSize: 14 }}>PayTR ile güvenli ödeme</div><div style={{ color: '#6b7280', fontSize: 13, marginTop: 4 }}>Türk avukatlar için TRY cinsinden 3D Secure ödeme; tüm kartlar ve taksit desteği.</div></div>
           </div>
         </div>
       </section>
@@ -472,7 +474,6 @@ export default function LandingPage() {
             {([
               { key: 'windows', icon: '🪟', name: 'Windows', sub: 'Windows 10 / 11 · .exe', url: 'https://github.com/semihkl1971-code/avukat-app/releases/download/desktop-v1.0.1/Avukatim.Setup.1.0.0.exe' },
               { key: 'mac', icon: '🍎', name: 'macOS', sub: 'macOS 12+ · Apple Silicon · .dmg', url: 'https://github.com/semihkl1971-code/avukat-app/releases/download/desktop-v1.0.1/Avukatim-1.0.0-arm64.dmg' },
-              { key: 'linux', icon: '🐧', name: 'Linux', sub: 'Evrensel · .AppImage', url: 'https://github.com/semihkl1971-code/avukat-app/releases/download/desktop-v1.0.1/Avukatim-1.0.0.AppImage' },
             ] as const).map(o => {
               const current = osName === o.key
               return (

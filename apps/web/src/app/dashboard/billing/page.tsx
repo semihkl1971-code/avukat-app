@@ -24,7 +24,6 @@ export default async function BillingPage({ searchParams }: { searchParams: Prom
   const { data: org } = await supabase.from('organizations').select('*').eq('id', profile!.organization_id).single()
 
   const currentTier = (org?.subscription_tier ?? 'free') as SubscriptionTier
-  const isTurkey = org?.country_code !== 'GLOBAL'
 
   return (
     <div style={{ fontFamily: "'Inter','Segoe UI',sans-serif", borderRadius: 24, overflow: 'hidden', background: 'radial-gradient(1000px 500px at 50% -15%, rgba(108,99,255,0.22), transparent), linear-gradient(180deg,#0a0913,#07090f)', border: '1px solid rgba(108,99,255,0.18)', color: '#e8eaf0', minHeight: 'calc(100vh - 130px)' }}>
@@ -62,7 +61,7 @@ export default async function BillingPage({ searchParams }: { searchParams: Prom
                 {isCurrent && <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(168,85,247,0.2)', color: '#c4b5fd', fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 100 }}>Mevcut</div>}
 
                 <div style={{ fontSize: 15, fontWeight: 700, color: '#f1f5f9' }}>{plan.name}</div>
-                <div style={{ fontSize: 26, fontWeight: 800, background: 'linear-gradient(135deg,#a855f7,#6c63ff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', marginTop: 6 }}>{isTurkey ? plan.priceTRY : plan.priceUSD}</div>
+                <div style={{ fontSize: 26, fontWeight: 800, background: 'linear-gradient(135deg,#a855f7,#6c63ff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', marginTop: 6 }}>{plan.priceTRY}</div>
 
                 <ul style={{ listStyle: 'none', padding: 0, margin: '16px 0 0', display: 'flex', flexDirection: 'column', gap: 8, fontSize: 13, color: '#9ca3af' }}>
                   <li>✓ {limits.maxLawyers === -1 ? 'Sınırsız' : limits.maxLawyers} Avukat</li>
@@ -90,11 +89,10 @@ export default async function BillingPage({ searchParams }: { searchParams: Prom
         <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 18, padding: 22 }}>
           <h3 style={{ fontWeight: 700, color: '#f1f5f9', margin: '0 0 14px', fontSize: 16 }}>Ödeme Yöntemi</h3>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-            <div style={{ padding: '9px 16px', borderRadius: 10, fontSize: 13.5, fontWeight: 600, background: 'rgba(108,99,255,0.12)', border: '1px solid rgba(108,99,255,0.4)', color: '#c4b5fd' }}>🇹🇷 PayTR (Türkiye — TRY)</div>
-            <div style={{ padding: '9px 16px', borderRadius: 10, fontSize: 13.5, fontWeight: 600, border: '1px solid rgba(255,255,255,0.1)', color: '#8892a4' }}>🌍 Stripe (Global — USD/EUR)</div>
+            <div style={{ padding: '9px 16px', borderRadius: 10, fontSize: 13.5, fontWeight: 600, background: 'rgba(108,99,255,0.12)', border: '1px solid rgba(108,99,255,0.4)', color: '#c4b5fd' }}>🇹🇷 PayTR — TRY (Visa · Mastercard · Troy)</div>
           </div>
           <p style={{ fontSize: 12.5, color: '#6b7280', marginTop: 14, lineHeight: 1.6 }}>
-            Türkiye içi ödemeler PayTR güvenli altyapısıyla alınır (3D Secure, taksit ve tüm kartlar desteklenir). Kart bilgileriniz sunucularımızda saklanmaz.
+            Ödemeler PayTR güvenli altyapısıyla alınır (3D Secure, taksit ve tüm Türk kartları desteklenir). Kart bilgileriniz sunucularımızda saklanmaz.
           </p>
         </div>
       </div>
