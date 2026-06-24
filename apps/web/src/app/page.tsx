@@ -2,7 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import { LandingStyles, LandingReveal, HeroBackdrop, QuickFeatures, GlobeSection, PeopleSection, CourtroomSection, PhoneMockup, FeatureVisual } from '@/components/landing/Animations'
+
+// WebGL 3D hero sahnesi — yalnızca tarayıcıda (three.js)
+const Hero3D = dynamic(() => import('@/components/landing/Hero3D'), { ssr: false })
 
 interface BIPEvent extends Event { prompt: () => Promise<void>; userChoice: Promise<{ outcome: string }> }
 
@@ -191,6 +195,7 @@ export default function LandingPage() {
       {/* ═══════════ BÖLÜM 1 — HERO + VİDEO ═══════════ */}
       <section style={{ position: 'relative', minHeight: '92vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 24px', maxWidth: 1100, margin: '0 auto', textAlign: 'center' }}>
         <HeroBackdrop />
+        <Hero3D />
         <div style={{ position: 'relative', zIndex: 1, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(108,99,255,0.1)', border: '1px solid rgba(108,99,255,0.25)', borderRadius: 100, padding: '5px 14px', fontSize: 13, color: '#a89fff', marginBottom: 24 }}>
           🚀 Türkiye'nin #1 Hukuk Bürosu Platformu
