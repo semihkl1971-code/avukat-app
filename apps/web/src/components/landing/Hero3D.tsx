@@ -25,7 +25,7 @@ export default function Hero3D() {
 
     const scene = new THREE.Scene()
     const camera = new THREE.PerspectiveCamera(55, w() / h(), 0.1, 100)
-    camera.position.z = 16
+    camera.position.z = 14
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' })
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.6))
@@ -38,12 +38,12 @@ export default function Hero3D() {
 
     // ── Çekirdek: iç içe iki wireframe ikosahedron ──
     const ico1 = new THREE.Mesh(
-      new THREE.IcosahedronGeometry(4.6, 1),
-      new THREE.MeshBasicMaterial({ color: 0x8b80ff, wireframe: true, transparent: true, opacity: 0.55 }),
+      new THREE.IcosahedronGeometry(4.8, 1),
+      new THREE.MeshBasicMaterial({ color: 0x9d92ff, wireframe: true, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false }),
     )
     const ico2 = new THREE.Mesh(
-      new THREE.IcosahedronGeometry(6.6, 1),
-      new THREE.MeshBasicMaterial({ color: 0xa855f7, wireframe: true, transparent: true, opacity: 0.18 }),
+      new THREE.IcosahedronGeometry(7, 1),
+      new THREE.MeshBasicMaterial({ color: 0xa855f7, wireframe: true, transparent: true, opacity: 0.35, blending: THREE.AdditiveBlending, depthWrite: false }),
     )
     group.add(ico1, ico2)
 
@@ -52,12 +52,12 @@ export default function Hero3D() {
     nodeGeo.setAttribute('position', ico1.geometry.getAttribute('position').clone())
     const nodes = new THREE.Points(
       nodeGeo,
-      new THREE.PointsMaterial({ color: 0x22d3ee, size: 0.16, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false }),
+      new THREE.PointsMaterial({ color: 0x5eead4, size: 0.28, transparent: true, opacity: 1, blending: THREE.AdditiveBlending, depthWrite: false }),
     )
     group.add(nodes)
 
     // ── Parçacık bulutu (küresel kabuk) ──
-    const COUNT = 1300
+    const COUNT = 1700
     const pPos = new Float32Array(COUNT * 3)
     const pCol = new Float32Array(COUNT * 3)
     const cA = new THREE.Color(0x6c63ff)
@@ -77,7 +77,7 @@ export default function Hero3D() {
     partGeo.setAttribute('color', new THREE.BufferAttribute(pCol, 3))
     const particles = new THREE.Points(
       partGeo,
-      new THREE.PointsMaterial({ size: 0.08, vertexColors: true, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false }),
+      new THREE.PointsMaterial({ size: 0.12, vertexColors: true, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false }),
     )
     scene.add(particles)
 
@@ -143,8 +143,8 @@ export default function Hero3D() {
       style={{
         position: 'absolute', top: 0, left: 'calc(50% - 50vw)', width: '100vw', height: '100%',
         zIndex: 0, pointerEvents: 'none', overflow: 'hidden',
-        maskImage: 'radial-gradient(ellipse 75% 70% at 50% 42%, #000 38%, transparent 78%)',
-        WebkitMaskImage: 'radial-gradient(ellipse 75% 70% at 50% 42%, #000 38%, transparent 78%)',
+        maskImage: 'radial-gradient(ellipse 92% 88% at 50% 40%, #000 55%, transparent 92%)',
+        WebkitMaskImage: 'radial-gradient(ellipse 92% 88% at 50% 40%, #000 55%, transparent 92%)',
       }}
     />
   )
