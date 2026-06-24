@@ -5,6 +5,8 @@ import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { LandingStyles, LandingReveal, HeroBackdrop, QuickFeatures, GlobeSection, PeopleSection, CourtroomSection, PhoneMockup, FeatureVisual } from '@/components/landing/Animations'
 
+import { GUIDES } from '@/lib/feature-guides'
+
 // WebGL 3D hero sahnesi — yalnızca tarayıcıda (three.js)
 const Hero3D = dynamic(() => import('@/components/landing/Hero3D'), { ssr: false })
 
@@ -86,6 +88,7 @@ const DEMO_QUESTIONS = [
 
 export default function LandingPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(0)
+  const [featOpen, setFeatOpen] = useState(false)
   const [activeVideo, setActiveVideo] = useState<string | null>(null)
   const [demoQ, setDemoQ] = useState('')
   const [demoA, setDemoA] = useState('')
@@ -180,10 +183,29 @@ export default function LandingPage() {
             <span style={{ fontSize: 22 }}>⚖️</span>
             <span style={{ fontWeight: 800, fontSize: 18, letterSpacing: '-0.5px' }}>Avukat<span style={{ color: '#6c63ff' }}>ım</span></span>
           </div>
-          <div className="nav-links" style={{ display: 'flex', gap: 4 }}>
-            {[['AI Asistan', '#ai-demo'], ['Özellikler', '#features'], ['Videolar', '#videos'], ['Fiyatlar', '#pricing'], ['SSS', '#faq']].map(([l, h]) => (
-              <a key={l} href={h} className="nav-link" style={{ padding: '6px 14px', borderRadius: 8, color: '#9ca3af', textDecoration: 'none', fontSize: 14, fontWeight: 500 }}>{l}</a>
-            ))}
+          <div className="nav-links" style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+            {/* Açılır "Özellikler" menüsü — her biri ayrı rehber sayfası açar */}
+            <div style={{ position: 'relative' }} onMouseEnter={() => setFeatOpen(true)} onMouseLeave={() => setFeatOpen(false)}>
+              <button onClick={() => setFeatOpen(o => !o)} className="nav-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '6px 14px', borderRadius: 8, color: featOpen ? '#fff' : '#9ca3af', background: featOpen ? 'rgba(255,255,255,0.06)' : 'none', border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 500, fontFamily: 'inherit' }} aria-expanded={featOpen}>
+                Özellikler <span style={{ fontSize: 10, transform: featOpen ? 'rotate(180deg)' : 'none', transition: 'transform .2s', display: 'inline-block' }}>▾</span>
+              </button>
+              {featOpen && (
+                <div style={{ position: 'absolute', top: '100%', left: 0, marginTop: 8, width: 340, background: 'rgba(13,15,26,0.98)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 16, padding: 8, boxShadow: '0 24px 60px rgba(0,0,0,0.6)', zIndex: 200 }}>
+                  {GUIDES.map(g => (
+                    <Link key={g.slug} href={`/ozellik/${g.slug}`} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 12px', borderRadius: 11, textDecoration: 'none' }} className="feat-item">
+                      <span style={{ flexShrink: 0, width: 32, height: 32, borderRadius: 9, background: `linear-gradient(135deg,${g.color},${g.color2})`, display: 'block', boxShadow: `0 4px 12px ${g.color}55` }} />
+                      <span style={{ flex: 1, minWidth: 0 }}>
+                        <span style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#f1f5f9' }}>{g.name}</span>
+                        <span style={{ display: 'block', fontSize: 11.5, color: '#8892a4', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{g.summary}</span>
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+            <Link href="/ozellik/ai" className="nav-link" style={{ padding: '6px 14px', borderRadius: 8, color: '#9ca3af', textDecoration: 'none', fontSize: 14, fontWeight: 500 }}>AI Asistan</Link>
+            <a href="#pricing" className="nav-link" style={{ padding: '6px 14px', borderRadius: 8, color: '#9ca3af', textDecoration: 'none', fontSize: 14, fontWeight: 500 }}>Fiyatlar</a>
+            <a href="#faq" className="nav-link" style={{ padding: '6px 14px', borderRadius: 8, color: '#9ca3af', textDecoration: 'none', fontSize: 14, fontWeight: 500 }}>SSS</a>
           </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -200,35 +222,22 @@ export default function LandingPage() {
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(108,99,255,0.1)', border: '1px solid rgba(108,99,255,0.25)', borderRadius: 100, padding: '5px 14px', fontSize: 13, color: '#a89fff', marginBottom: 24 }}>
           🚀 Türkiye'nin #1 Hukuk Bürosu Platformu
         </div>
-        <h1 style={{ fontSize: 'clamp(34px,6vw,68px)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-2px', margin: '0 0 20px' }}>
-          Hukuk Büronuzu<br /><span style={{ background: 'linear-gradient(135deg,#6c63ff,#a855f7,#06b6d4)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Dijitalleştirin</span>
+        <h1 style={{ fontSize: 'clamp(42px,8vw,86px)', fontWeight: 900, lineHeight: 1.04, letterSpacing: '-2.5px', margin: '0 0 24px', textShadow: '0 4px 60px rgba(108,99,255,0.35)' }}>
+          Hukuk Büronuzu<br /><span style={{ background: 'linear-gradient(135deg,#8b80ff,#a855f7,#22d3ee)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Dijitalleştirin</span>
         </h1>
-        <p style={{ fontSize: 'clamp(15px,2vw,18px)', color: '#8892a4', lineHeight: 1.7, maxWidth: 560, margin: '0 auto 32px' }}>
-          UYAP ile otomatik dava takibi, WhatsApp & Gmail ile müvekkil iletişimi, yapay zeka destekli hukuki araştırma — tek platformda.
+        <p style={{ fontSize: 'clamp(16px,2.2vw,21px)', color: '#aeb6c6', lineHeight: 1.7, maxWidth: 640, margin: '0 auto 38px', fontWeight: 500 }}>
+          UYAP ile otomatik dava takibi, WhatsApp &amp; Gmail ile müvekkil iletişimi, yapay zeka destekli hukuki araştırma — <span style={{ color: '#e8eaf0', fontWeight: 700 }}>tek platformda.</span>
         </p>
-        <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 40 }}>
-          <Link href="/register" className="la-btn-anim la-btn-pulse" style={{ padding: '14px 30px', borderRadius: 12, background: 'linear-gradient(135deg,#6c63ff,#a855f7)', color: '#fff', textDecoration: 'none', fontSize: 15, fontWeight: 700, boxShadow: '0 8px 32px rgba(108,99,255,0.4)' }}>14 Gün Ücretsiz Dene →</Link>
-          <Link href="/demo" className="la-btn-anim" style={{ padding: '14px 30px', borderRadius: 12, border: '1px solid rgba(255,255,255,0.15)', color: '#c8d0dc', textDecoration: 'none', fontSize: 15, fontWeight: 600 }}>🖥 Demoyu İncele</Link>
+        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 30 }}>
+          <Link href="/register" className="la-btn-anim la-btn-pulse" style={{ padding: '16px 34px', borderRadius: 14, background: 'linear-gradient(135deg,#6c63ff,#a855f7)', color: '#fff', textDecoration: 'none', fontSize: 16, fontWeight: 700, boxShadow: '0 8px 32px rgba(108,99,255,0.45)' }}>14 Gün Ücretsiz Dene →</Link>
+          <Link href="/ozellik/uyap" className="la-btn-anim" style={{ padding: '16px 34px', borderRadius: 14, border: '1px solid rgba(255,255,255,0.18)', color: '#e2e8f0', textDecoration: 'none', fontSize: 16, fontWeight: 600, background: 'rgba(255,255,255,0.03)' }}>Nasıl Çalışır? ↓</Link>
         </div>
-
-        {/* HERO VİDEO */}
-        <div style={{ width: '100%', maxWidth: 880, borderRadius: 20, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.12)', boxShadow: '0 40px 120px rgba(0,0,0,0.6)', position: 'relative', aspectRatio: '16/9', background: '#0d0f1a' }}>
-          <video
-            src={HERO_VIDEO}
-            poster={HERO_POSTER}
-            controls
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-          />
-          <div style={{ position: 'absolute', top: 12, left: 12, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)', borderRadius: 8, padding: '4px 12px', fontSize: 12, color: '#cbd5e1', pointerEvents: 'none' }}>
-            ▶ 60 saniyelik tanıtım
-          </div>
+        <p style={{ marginTop: 4, fontSize: 13, color: '#6b7280' }}>Kredi kartı gerekmez · KVKK uyumlu · 2.400+ avukat kullanıyor</p>
+        {/* aşağı kaydır ipucu */}
+        <div style={{ marginTop: 46, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, color: '#6b7280', fontSize: 12 }}>
+          <span>özellikleri keşfedin</span>
+          <span style={{ fontSize: 20, animation: 'la-bob 1.6s ease-in-out infinite' }}>↓</span>
         </div>
-        <p style={{ marginTop: 18, fontSize: 12, color: '#4b5563' }}>Kredi kartı gerekmez · KVKK uyumlu · 2.400+ avukat kullanıyor</p>
         </div>
       </section>
 
@@ -302,6 +311,7 @@ export default function LandingPage() {
                     </div>
                   ))}
                 </div>
+                <Link href={`/ozellik/${({ uyap: 'uyap', inbox: 'iletisim', dash: 'dava' } as Record<string, string>)[f.kind]}`} className="la-btn-anim" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, marginTop: 26, padding: '11px 22px', borderRadius: 12, border: `1px solid ${f.color}66`, color: f.color, textDecoration: 'none', fontSize: 15, fontWeight: 700, background: `${f.color}14` }}>Nasıl çalışır, nasıl kullanılır →</Link>
               </div>
               <div className="la-reveal d1" style={{ order: i % 2 === 0 ? 1 : 0, position: 'relative' }}>
                 {f.video ? (
@@ -591,6 +601,8 @@ export default function LandingPage() {
         .nav-link:hover { color: #fff !important; background: rgba(255,255,255,0.06); }
         .nav-link::after { content: ''; position: absolute; left: 14px; right: 14px; bottom: 2px; height: 2px; border-radius: 2px; background: linear-gradient(90deg,#6c63ff,#a855f7); transform: scaleX(0); transform-origin: left; transition: transform .25s ease; }
         .nav-link:hover::after { transform: scaleX(1); }
+        .feat-item { transition: background .15s ease; }
+        .feat-item:hover { background: rgba(108,99,255,0.12); }
         @media (max-width: 860px) {
           .nav-links { display: none !important; }
           .feature-row { grid-template-columns: 1fr !important; }
