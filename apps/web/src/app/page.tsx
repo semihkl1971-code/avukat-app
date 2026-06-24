@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { LandingStyles, LandingReveal, HeroBackdrop, QuickFeatures, GlobeSection, PeopleSection, CourtroomSection, PhoneMockup, FeatureVisual } from '@/components/landing/Animations'
 
 interface BIPEvent extends Event { prompt: () => Promise<void>; userChoice: Promise<{ outcome: string }> }
 
@@ -21,21 +22,21 @@ const TUTORIALS = [
 
 const FEATURES = [
   {
-    tag: 'UYAP ENTEGRASYONU', color: '#6c63ff',
+    tag: 'UYAP ENTEGRASYONU', color: '#6c63ff', kind: 'uyap' as const, video: '',
     title: 'Dava Takibini Otomatikleştirin',
     desc: 'UYAP ile doğrudan bağlantı kurarak tüm dava ve duruşma bilgilerinizi otomatik senkronize edin. Duruşma tarihlerini kaçırmayın, mahkeme kararlarını anında görün.',
     items: ['30 dakikada bir otomatik senkronizasyon', 'Duruşma hatırlatma bildirimleri', 'UYAP belge indirme', 'Karar ve safahat takibi'],
     image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=900&q=80&auto=format&fit=crop',
   },
   {
-    tag: 'BİRLEŞİK İLETİŞİM', color: '#10b981',
+    tag: 'BİRLEŞİK İLETİŞİM', color: '#10b981', kind: 'inbox' as const, video: '/videos/feat-iletisim.mp4',
     title: 'WhatsApp & Gmail Tek Ekranda',
     desc: 'Müvekkillerinizle tüm yazışmaları tek gelen kutusundan yönetin. WhatsApp mesajları ve e-postalar otomatik olarak ilgili davaya bağlanır.',
     items: ['Birleşik gelen kutusu', 'Otomatik müvekkil eşleştirme', 'Hazır şablon mesajlar', 'Okundu bilgisi takibi'],
     image: 'https://images.unsplash.com/photo-1577563908411-5077b6dc7624?w=900&q=80&auto=format&fit=crop',
   },
   {
-    tag: 'DAVA YÖNETİMİ', color: '#f59e0b',
+    tag: 'DAVA YÖNETİMİ', color: '#f59e0b', kind: 'dash' as const, video: '/videos/feat-dava.mp4',
     title: 'Tüm Büronuz Tek Platformda',
     desc: 'Müvekkil bilgileri, dava dosyaları, belgeler, duruşma tutanakları ve zaman kayıtlarını profesyonel bir arayüzde yönetin. Ekibinizle gerçek zamanlı çalışın.',
     items: ['Müvekkil ve dava takibi', 'Belge yönetimi ve OCR', 'Zaman ve ücret takibi', 'Ekip iş birliği'],
@@ -147,7 +148,7 @@ export default function LandingPage() {
   }
 
   const renderPlan = (plan: Plan) => (
-    <div key={plan.name} style={{ position: 'relative', background: plan.highlight ? 'linear-gradient(160deg,rgba(108,99,255,0.12),rgba(168,85,247,0.08))' : 'rgba(255,255,255,0.025)', border: plan.highlight ? '1px solid rgba(108,99,255,0.5)' : '1px solid rgba(255,255,255,0.07)', borderRadius: 20, padding: 24, display: 'flex', flexDirection: 'column', boxShadow: plan.highlight ? '0 0 60px rgba(108,99,255,0.15)' : 'none' }}>
+    <div key={plan.name} className="la-reveal la-plan-anim" style={{ position: 'relative', background: plan.highlight ? 'linear-gradient(160deg,rgba(108,99,255,0.12),rgba(168,85,247,0.08))' : 'rgba(255,255,255,0.025)', border: plan.highlight ? '1px solid rgba(108,99,255,0.5)' : '1px solid rgba(255,255,255,0.07)', borderRadius: 20, padding: 24, display: 'flex', flexDirection: 'column', boxShadow: plan.highlight ? '0 0 60px rgba(108,99,255,0.15)' : 'none' }}>
       {plan.highlight && <div style={{ position: 'absolute', top: -13, left: '50%', transform: 'translateX(-50%)', background: 'linear-gradient(135deg,#6c63ff,#a855f7)', color: '#fff', fontSize: 11, fontWeight: 700, padding: '4px 16px', borderRadius: 100, whiteSpace: 'nowrap' }}>EN POPÜLER</div>}
       <div style={{ fontSize: 13, fontWeight: 700, color: '#9ca3af', marginBottom: 4 }}>{plan.name}</div>
       <div style={{ fontSize: 11, color: '#4b5563', marginBottom: 16 }}>{plan.desc}</div>
@@ -165,6 +166,8 @@ export default function LandingPage() {
 
   return (
     <div style={{ fontFamily: "'Inter','Segoe UI',sans-serif", background: '#07090f', color: '#e8eaf0', overflowX: 'hidden' }}>
+      <LandingStyles />
+      <LandingReveal />
 
       {/* ── NAV ── */}
       <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 clamp(20px,5vw,48px)', height: 64, borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'sticky', top: 0, background: 'rgba(7,9,15,0.95)', backdropFilter: 'blur(16px)', zIndex: 100 }}>
@@ -180,13 +183,15 @@ export default function LandingPage() {
           </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <Link href="/login" style={{ padding: '8px 18px', borderRadius: 8, color: '#9ca3af', textDecoration: 'none', fontSize: 14 }}>Giriş</Link>
-          <Link href="/register" style={{ padding: '8px 18px', borderRadius: 8, background: 'linear-gradient(135deg,#6c63ff,#a855f7)', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 600 }}>Ücretsiz Başla</Link>
+          <Link href="/login" className="la-btn-anim" style={{ padding: '8px 18px', borderRadius: 8, color: '#9ca3af', textDecoration: 'none', fontSize: 14 }}>Giriş</Link>
+          <Link href="/register" className="la-btn-anim la-btn-pulse" style={{ padding: '8px 18px', borderRadius: 8, background: 'linear-gradient(135deg,#6c63ff,#a855f7)', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 600 }}>Ücretsiz Başla</Link>
         </div>
       </nav>
 
       {/* ═══════════ BÖLÜM 1 — HERO + VİDEO ═══════════ */}
-      <section style={{ minHeight: '92vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 24px', maxWidth: 1100, margin: '0 auto', textAlign: 'center' }}>
+      <section style={{ position: 'relative', minHeight: '92vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 24px', maxWidth: 1100, margin: '0 auto', textAlign: 'center' }}>
+        <HeroBackdrop />
+        <div style={{ position: 'relative', zIndex: 1, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(108,99,255,0.1)', border: '1px solid rgba(108,99,255,0.25)', borderRadius: 100, padding: '5px 14px', fontSize: 13, color: '#a89fff', marginBottom: 24 }}>
           🚀 Türkiye'nin #1 Hukuk Bürosu Platformu
         </div>
@@ -197,8 +202,8 @@ export default function LandingPage() {
           UYAP ile otomatik dava takibi, WhatsApp & Gmail ile müvekkil iletişimi, yapay zeka destekli hukuki araştırma — tek platformda.
         </p>
         <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 40 }}>
-          <Link href="/register" style={{ padding: '14px 30px', borderRadius: 12, background: 'linear-gradient(135deg,#6c63ff,#a855f7)', color: '#fff', textDecoration: 'none', fontSize: 15, fontWeight: 700, boxShadow: '0 8px 32px rgba(108,99,255,0.4)' }}>14 Gün Ücretsiz Dene →</Link>
-          <Link href="/demo" style={{ padding: '14px 30px', borderRadius: 12, border: '1px solid rgba(255,255,255,0.15)', color: '#c8d0dc', textDecoration: 'none', fontSize: 15, fontWeight: 600 }}>🖥 Demoyu İncele</Link>
+          <Link href="/register" className="la-btn-anim la-btn-pulse" style={{ padding: '14px 30px', borderRadius: 12, background: 'linear-gradient(135deg,#6c63ff,#a855f7)', color: '#fff', textDecoration: 'none', fontSize: 15, fontWeight: 700, boxShadow: '0 8px 32px rgba(108,99,255,0.4)' }}>14 Gün Ücretsiz Dene →</Link>
+          <Link href="/demo" className="la-btn-anim" style={{ padding: '14px 30px', borderRadius: 12, border: '1px solid rgba(255,255,255,0.15)', color: '#c8d0dc', textDecoration: 'none', fontSize: 15, fontWeight: 600 }}>🖥 Demoyu İncele</Link>
         </div>
 
         {/* HERO VİDEO */}
@@ -219,13 +224,17 @@ export default function LandingPage() {
           </div>
         </div>
         <p style={{ marginTop: 18, fontSize: 12, color: '#4b5563' }}>Kredi kartı gerekmez · KVKK uyumlu · 2.400+ avukat kullanıyor</p>
+        </div>
       </section>
+
+      {/* ═══════════ ÜST KUTUCUKLAR (hover'da içi dolar) ═══════════ */}
+      <QuickFeatures />
 
       {/* ═══════════ İSTATİSTİK ═══════════ */}
       <section style={{ borderTop: '1px solid rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '40px 24px', background: 'rgba(255,255,255,0.015)' }}>
         <div style={{ maxWidth: 800, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 24, textAlign: 'center' }}>
           {[['2.400+', 'Aktif Avukat'], ['180K+', 'Yönetilen Dava'], ['99.9%', 'Uptime'], ['4.9/5', 'Puan']].map(([v, l]) => (
-            <div key={l}>
+            <div key={l} className="la-reveal">
               <div style={{ fontSize: 'clamp(24px,4vw,34px)', fontWeight: 800, background: 'linear-gradient(135deg,#6c63ff,#a855f7)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{v}</div>
               <div style={{ fontSize: 13, color: '#6b7280', marginTop: 4 }}>{l}</div>
             </div>
@@ -276,27 +285,38 @@ export default function LandingPage() {
         {FEATURES.map((f, i) => (
           <section key={f.tag} style={{ minHeight: '85vh', display: 'flex', alignItems: 'center', padding: '80px 24px', borderBottom: '1px solid rgba(255,255,255,0.04)', background: i % 2 === 1 ? 'rgba(255,255,255,0.015)' : 'transparent' }}>
             <div className="feature-row" style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(32px,6vw,72px)', alignItems: 'center', width: '100%' }}>
-              <div style={{ order: i % 2 === 0 ? 0 : 1 }}>
+              <div className="la-stagger" style={{ order: i % 2 === 0 ? 0 : 1 }}>
                 <div style={{ display: 'inline-block', fontSize: 12, fontWeight: 700, color: f.color, letterSpacing: '1.5px', marginBottom: 16 }}>{f.tag}</div>
                 <h2 style={{ fontSize: 'clamp(26px,4vw,38px)', fontWeight: 800, letterSpacing: '-1px', marginBottom: 18, color: '#f1f5f9', lineHeight: 1.15 }}>{f.title}</h2>
                 <p style={{ color: '#8892a4', lineHeight: 1.75, fontSize: 16, marginBottom: 28 }}>{f.desc}</p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <div className="la-stagger" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                   {f.items.map(it => (
-                    <div key={it} style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 15, color: '#c4cfe0' }}>
-                      <span style={{ width: 22, height: 22, borderRadius: '50%', background: `${f.color}25`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, color: f.color, flexShrink: 0 }}>✓</span>
+                    <div key={it} className="la-fcard">
+                      <span className="la-fic" style={{ background: `linear-gradient(135deg, ${f.color}, #a855f7)` }}>✓</span>
                       {it}
                     </div>
                   ))}
                 </div>
               </div>
-              <div style={{ order: i % 2 === 0 ? 1 : 0, position: 'relative' }}>
-                <img src={f.image} alt={f.title} loading="lazy" style={{ width: '100%', borderRadius: 20, border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 30px 80px rgba(0,0,0,0.5)', display: 'block', aspectRatio: '4/3', objectFit: 'cover' }} />
-                <div style={{ position: 'absolute', inset: 0, borderRadius: 20, background: `linear-gradient(135deg,${f.color}22,transparent 60%)`, pointerEvents: 'none' }} />
+              <div className="la-reveal d1" style={{ order: i % 2 === 0 ? 1 : 0, position: 'relative' }}>
+                {f.video ? (
+                  <div style={{ position: 'relative', borderRadius: 20, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 30px 80px rgba(0,0,0,0.5)', aspectRatio: '4/3' }}>
+                    <video src={f.video} autoPlay muted loop playsInline preload="metadata" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                    <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(135deg,${f.color}22,transparent 55%)`, pointerEvents: 'none' }} />
+                  </div>
+                ) : (
+                  <FeatureVisual kind={f.kind} />
+                )}
               </div>
             </div>
           </section>
         ))}
       </div>
+
+      {/* ═══════════ ANİMASYONLU BÖLÜMLER — DÜNYA / İNSANLAR / DURUŞMA ═══════════ */}
+      <GlobeSection />
+      <PeopleSection />
+      <CourtroomSection />
 
       {/* ═══════════ BÖLÜM 5 — ANLATIM VİDEOLARI ═══════════ */}
       <section id="videos" style={{ padding: '90px 24px', background: 'linear-gradient(180deg,#07090f,#0d0b1a,#07090f)' }}>
@@ -337,7 +357,7 @@ export default function LandingPage() {
           </div>
           <div className="testi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 24 }}>
             {TESTIMONIALS.map(t => (
-              <div key={t.name} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 20, padding: 28 }}>
+              <div key={t.name} className="la-reveal la-tcard" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 20, padding: 28 }}>
                 <div style={{ display: 'flex', gap: 4, marginBottom: 16 }}>
                   {[1, 2, 3, 4, 5].map(i => <span key={i} style={{ color: '#f59e0b', fontSize: 14 }}>★</span>)}
                 </div>
@@ -415,6 +435,7 @@ export default function LandingPage() {
       {/* ═══════════ BÖLÜM 9 — CTA ═══════════ */}
       <section style={{ padding: '90px 24px' }}>
         <div style={{ maxWidth: 700, margin: '0 auto', textAlign: 'center', background: 'linear-gradient(135deg,rgba(108,99,255,0.12),rgba(168,85,247,0.08))', border: '1px solid rgba(108,99,255,0.25)', borderRadius: 28, padding: 'clamp(40px,6vw,64px) 40px' }}>
+          <video src="/videos/logo-acilis.mp4" autoPlay muted loop playsInline style={{ width: 'min(240px,68%)', display: 'block', margin: '0 auto 20px', borderRadius: 16 }} />
           <h2 style={{ fontSize: 'clamp(28px,4vw,38px)', fontWeight: 800, letterSpacing: '-1px', marginBottom: 14 }}>Hemen Başlayın</h2>
           <p style={{ color: '#8892a4', fontSize: 16, lineHeight: 1.7, marginBottom: 32 }}>14 gün ücretsiz. Kredi kartı gerekmez. 5 dakikada kurulum.</p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
@@ -432,11 +453,11 @@ export default function LandingPage() {
           <p style={{ color: '#8892a4', fontSize: 16, lineHeight: 1.7, maxWidth: 560, margin: '0 auto 14px' }}>Avukatım&apos;ı bir program gibi bilgisayarınıza kurun — ayrı pencere, hızlı erişim, masaüstü bildirimleri. Tarayıcı sekmesi aramaya son.</p>
           {installed && <div style={{ display: 'inline-block', fontSize: 13, color: '#6ee7b7', background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: 100, padding: '6px 16px', marginBottom: 20 }}>✓ Uygulama bu cihaza kurulu</div>}
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))', gap: 16, marginTop: 24 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 16, marginTop: 24 }}>
             {([
-              { key: 'windows', icon: '🪟', name: 'Windows', sub: 'Windows 10 / 11 · .exe' },
-              { key: 'mac', icon: '🍎', name: 'macOS', sub: 'macOS 12+ · Apple Silicon & Intel' },
-              { key: 'linux', icon: '🐧', name: 'Linux', sub: 'AppImage · deb · Ubuntu/Fedora' },
+              { key: 'windows', icon: '🪟', name: 'Windows', sub: 'Windows 10 / 11 · .exe', url: 'https://github.com/semihkl1971-code/avukat-app/releases/download/desktop-v1.0.1/Avukatim.Setup.1.0.0.exe' },
+              { key: 'mac', icon: '🍎', name: 'macOS', sub: 'macOS 12+ · Apple Silicon · .dmg', url: 'https://github.com/semihkl1971-code/avukat-app/releases/download/desktop-v1.0.1/Avukatim-1.0.0-arm64.dmg' },
+              { key: 'linux', icon: '🐧', name: 'Linux', sub: 'Evrensel · .AppImage', url: 'https://github.com/semihkl1971-code/avukat-app/releases/download/desktop-v1.0.1/Avukatim-1.0.0.AppImage' },
             ] as const).map(o => {
               const current = osName === o.key
               return (
@@ -445,15 +466,15 @@ export default function LandingPage() {
                   <div style={{ fontSize: 48, marginBottom: 12 }}>{o.icon}</div>
                   <div style={{ fontSize: 18, fontWeight: 800, color: '#f1f5f9' }}>{o.name}</div>
                   <div style={{ fontSize: 12.5, color: '#8892a4', margin: '6px 0 18px' }}>{o.sub}</div>
-                  <button onClick={installApp} style={{ width: '100%', padding: '12px 0', borderRadius: 12, border: 'none', background: current ? 'linear-gradient(135deg,#6c63ff,#a855f7)' : 'rgba(255,255,255,0.06)', color: '#fff', fontSize: 14.5, fontWeight: 700, cursor: 'pointer', boxShadow: current ? '0 8px 24px rgba(108,99,255,0.35)' : 'none' }}>
-                    ⬇ İndir & Kur
-                  </button>
+                  <a href={o.url} style={{ display: 'block', width: '100%', padding: '12px 0', borderRadius: 12, border: 'none', background: current ? 'linear-gradient(135deg,#6c63ff,#a855f7)' : 'rgba(255,255,255,0.06)', color: '#fff', fontSize: 14.5, fontWeight: 700, cursor: 'pointer', textDecoration: 'none', boxShadow: current ? '0 8px 24px rgba(108,99,255,0.35)' : 'none' }}>
+                    ⬇ İndir
+                  </a>
                 </div>
               )
             })}
           </div>
           <p style={{ fontSize: 12.5, color: '#5b5380', marginTop: 18, lineHeight: 1.6 }}>
-            💡 Tek tıkla kurulum: tarayıcınızdan &quot;uygulama olarak yükle&quot; ile saniyeler içinde. Sürüm 1.0 · ücretsiz · otomatik güncellenir.
+            💡 Sürüm 1.0.1 · ücretsiz. Windows&apos;ta &quot;Bilinmeyen yayıncı&quot; uyarısı çıkarsa &quot;Diğer bilgiler ▸ Yine de çalıştır&quot; deyin (uygulama imzasızdır, güvenlidir). Tarayıcıdan hızlı erişim için <button onClick={installApp} style={{ background: 'none', border: 'none', color: '#a89fff', cursor: 'pointer', textDecoration: 'underline', fontSize: 12.5, padding: 0 }}>uygulama olarak da yükleyebilirsiniz</button>.
           </p>
         </div>
       </section>
@@ -463,20 +484,24 @@ export default function LandingPage() {
         <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center' }}>
           <div style={{ fontSize: 12, fontWeight: 700, color: '#6c63ff', letterSpacing: '1.5px', marginBottom: 12 }}>HER YERDE YANINIZDA</div>
           <h2 style={{ fontSize: 'clamp(26px,4vw,38px)', fontWeight: 800, letterSpacing: '-1px', margin: '0 0 14px' }}>Mobil Uygulamayı İndirin</h2>
-          <p style={{ color: '#8892a4', fontSize: 16, lineHeight: 1.7, maxWidth: 520, margin: '0 auto 32px' }}>iOS ve Android için Avukatım uygulaması tüm planlara dahildir. Davalarınızı, mesajlarınızı ve duruşmalarınızı cebinizden takip edin.</p>
-          <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
-            {/* App Store */}
-            <a href="https://apps.apple.com/tr/app/avukatim" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 12, background: '#000', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 12, padding: '10px 20px', textDecoration: 'none', minWidth: 200 }}>
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="#fff"><path d="M17.05 12.04c-.03-2.6 2.13-3.85 2.23-3.91-1.22-1.78-3.11-2.02-3.78-2.05-1.61-.16-3.14.95-3.96.95-.81 0-2.07-.93-3.41-.9-1.75.03-3.37 1.02-4.27 2.59-1.82 3.16-.47 7.84 1.31 10.41.87 1.26 1.9 2.67 3.26 2.62 1.31-.05 1.8-.85 3.39-.85 1.58 0 2.03.85 3.41.82 1.41-.02 2.3-1.28 3.16-2.55 1-1.46 1.41-2.87 1.43-2.95-.03-.01-2.74-1.05-2.77-4.17l.27-.36zM14.5 4.6c.72-.87 1.2-2.08 1.07-3.29-1.03.04-2.28.69-3.02 1.56-.66.77-1.24 2-1.08 3.18 1.15.09 2.32-.58 3.03-1.45z"/></svg>
-              <span style={{ textAlign: 'left' }}><span style={{ display: 'block', fontSize: 10, color: '#9ca3af' }}>App Store'dan</span><span style={{ display: 'block', fontSize: 17, fontWeight: 700, color: '#fff' }}>İndirin</span></span>
+          <p style={{ color: '#8892a4', fontSize: 16, lineHeight: 1.7, maxWidth: 520, margin: '0 auto 8px' }}>iOS ve Android için Avukatım uygulaması tüm planlara dahildir. Davalarınızı, mesajlarınızı ve duruşmalarınızı cebinizden takip edin.</p>
+          <PhoneMockup />
+          <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap', marginTop: 24 }}>
+            {/* Android — doğrudan APK (şimdi çalışıyor) */}
+            <a href="https://expo.dev/artifacts/eas/ZDUrcr_ndI77qRpa6gTqBIku34AYvGBqExoU_lOQi6I.apk" style={{ display: 'inline-flex', alignItems: 'center', gap: 12, background: 'linear-gradient(135deg,#0d8b3d,#1ec45f)', border: '1px solid rgba(46,196,95,0.5)', borderRadius: 12, padding: '11px 22px', textDecoration: 'none', minWidth: 210, boxShadow: '0 8px 24px rgba(30,196,95,0.25)' }}>
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="#fff"><path d="M17.6 9.48l1.84-3.18a.4.4 0 10-.69-.4l-1.86 3.23a11.4 11.4 0 00-9.78 0L5.25 5.9a.4.4 0 10-.69.4L6.4 9.48A10.8 10.8 0 001 18h22a10.8 10.8 0 00-5.4-8.52zM7 15.25a1.25 1.25 0 110-2.5 1.25 1.25 0 010 2.5zm10 0a1.25 1.25 0 110-2.5 1.25 1.25 0 010 2.5z"/></svg>
+              <span style={{ textAlign: 'left' }}><span style={{ display: 'block', fontSize: 10, color: 'rgba(255,255,255,0.85)' }}>Android için</span><span style={{ display: 'block', fontSize: 17, fontWeight: 700, color: '#fff' }}>APK İndir</span></span>
             </a>
-            {/* Google Play */}
-            <a href="https://play.google.com/store/apps/details?id=com.avukatim.mobile" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 12, background: '#000', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 12, padding: '10px 20px', textDecoration: 'none', minWidth: 200 }}>
-              <svg width="24" height="24" viewBox="0 0 24 24"><path d="M3.6 2.4c-.2.3-.3.7-.3 1.2v16.8c0 .5.1.9.3 1.2l9-9.6-9-9.6z" fill="#00d2ff"/><path d="M16.5 8.7L5.4 2.2c-.5-.3-1-.3-1.4-.1l9.1 9.7 3.4-3.1z" fill="#00f076"/><path d="M16.5 15.3l-3.4-3.1-9.1 9.7c.4.2.9.2 1.4-.1l11.1-6.5z" fill="#ff3a44"/><path d="M20.4 10.7l-3.9-2.3-3.4 3.6 3.4 3.4 3.9-2.3c.9-.5.9-1.9 0-2.4z" fill="#ffce00"/></svg>
-              <span style={{ textAlign: 'left' }}><span style={{ display: 'block', fontSize: 10, color: '#9ca3af' }}>Google Play'den</span><span style={{ display: 'block', fontSize: 17, fontWeight: 700, color: '#fff' }}>İndirin</span></span>
-            </a>
+            {/* App Store — yakında (iOS sürümü henüz yayında değil) */}
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 12, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 12, padding: '11px 22px', minWidth: 210, opacity: 0.65 }}>
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="#9ca3af"><path d="M17.05 12.04c-.03-2.6 2.13-3.85 2.23-3.91-1.22-1.78-3.11-2.02-3.78-2.05-1.61-.16-3.14.95-3.96.95-.81 0-2.07-.93-3.41-.9-1.75.03-3.37 1.02-4.27 2.59-1.82 3.16-.47 7.84 1.31 10.41.87 1.26 1.9 2.67 3.26 2.62 1.31-.05 1.8-.85 3.39-.85 1.58 0 2.03.85 3.41.82 1.41-.02 2.3-1.28 3.16-2.55 1-1.46 1.41-2.87 1.43-2.95-.03-.01-2.74-1.05-2.77-4.17l.27-.36zM14.5 4.6c.72-.87 1.2-2.08 1.07-3.29-1.03.04-2.28.69-3.02 1.56-.66.77-1.24 2-1.08 3.18 1.15.09 2.32-.58 3.03-1.45z"/></svg>
+              <span style={{ textAlign: 'left' }}><span style={{ display: 'block', fontSize: 10, color: '#9ca3af' }}>App Store</span><span style={{ display: 'block', fontSize: 17, fontWeight: 700, color: '#cbd5e1' }}>Yakında</span></span>
+            </div>
           </div>
-          <p style={{ marginTop: 16, fontSize: 12, color: '#4b5563' }}>📲 4.9 ★ · 10.000+ indirme · iOS 15+ ve Android 8+</p>
+          <p style={{ marginTop: 16, fontSize: 12, color: '#4b5563' }}>📲 Android 8+ için APK ile doğrudan kurulum · iOS sürümü yakında · Türk hukuku için optimize</p>
+          <div className="la-reveal" style={{ maxWidth: 540, margin: '28px auto 0', borderRadius: 20, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 30px 80px rgba(0,0,0,0.5)', aspectRatio: '16/9' }}>
+            <video src="/videos/mobil-kullanim.mp4" autoPlay muted loop playsInline preload="metadata" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+          </div>
         </div>
       </section>
 
