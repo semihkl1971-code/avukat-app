@@ -28,53 +28,20 @@ const hex = (c: string, a: number) => {
   return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`
 }
 
-// ── "Nasıl Çalışır" — özelliğe göre farklı düzen ──
-function HowItWorks({ g }: { g: FeatureGuide }) {
-  if (g.variant === 'cards') {
-    return (
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))', gap: 16 }}>
-        {g.howItWorks.map((s, i) => (
-          <div key={i} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 18, padding: 22, position: 'relative', overflow: 'hidden' }}>
-            <div style={{ position: 'absolute', top: -20, right: -10, fontSize: 90, fontWeight: 900, color: hex(g.color, 0.08), lineHeight: 1 }}>{i + 1}</div>
-            <div style={{ position: 'relative' }}>
-              <div style={{ width: 34, height: 34, borderRadius: 10, background: hex(g.color, 0.16), color: g.color, display: 'grid', placeItems: 'center', fontWeight: 800, marginBottom: 12 }}>{i + 1}</div>
-              <div style={{ fontWeight: 700, fontSize: 16, color: '#f1f5f9', marginBottom: 6 }}>{s.t}</div>
-              <div style={{ fontSize: 14, color: '#9aa3b4', lineHeight: 1.6 }}>{s.d}</div>
-            </div>
-          </div>
-        ))}
-      </div>
-    )
-  }
-  if (g.variant === 'split') {
-    return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-        {g.howItWorks.map((s, i) => (
-          <div key={i} style={{ display: 'flex', flexDirection: i % 2 ? 'row-reverse' : 'row', alignItems: 'center', gap: 20, background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 18, padding: '20px 22px' }}>
-            <div style={{ flexShrink: 0, width: 58, height: 58, borderRadius: 16, background: `linear-gradient(135deg,${g.color},${g.color2})`, display: 'grid', placeItems: 'center', fontSize: 24, fontWeight: 900, color: '#fff', boxShadow: `0 8px 24px ${hex(g.color, 0.4)}` }}>{i + 1}</div>
-            <div style={{ flex: 1, textAlign: i % 2 ? 'right' : 'left' }}>
-              <div style={{ fontWeight: 700, fontSize: 17, color: '#f1f5f9', marginBottom: 5 }}>{s.t}</div>
-              <div style={{ fontSize: 14.5, color: '#9aa3b4', lineHeight: 1.65 }}>{s.d}</div>
-            </div>
-          </div>
-        ))}
-      </div>
-    )
-  }
-  // timeline
+// ── Madde madde adım listesi (kutucuksuz, temiz anlatım) ──
+function StepList({ steps, color }: { steps: { t: string; d: string }[]; color: string }) {
   return (
-    <div style={{ position: 'relative', paddingLeft: 28 }}>
-      <div style={{ position: 'absolute', left: 11, top: 6, bottom: 6, width: 2, background: `linear-gradient(${g.color},${hex(g.color2, 0.2)})` }} />
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
-        {g.howItWorks.map((s, i) => (
-          <div key={i} style={{ position: 'relative' }}>
-            <div style={{ position: 'absolute', left: -28, top: 2, width: 24, height: 24, borderRadius: '50%', background: g.color, color: '#fff', display: 'grid', placeItems: 'center', fontSize: 12, fontWeight: 800, boxShadow: `0 0 0 4px ${hex(g.color, 0.18)}` }}>{i + 1}</div>
-            <div style={{ fontWeight: 700, fontSize: 17, color: '#f1f5f9', marginBottom: 4 }}>{s.t}</div>
-            <div style={{ fontSize: 14.5, color: '#9aa3b4', lineHeight: 1.65, maxWidth: 620 }}>{s.d}</div>
+    <ol style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+      {steps.map((s, i) => (
+        <li key={i} style={{ display: 'flex', gap: 18, padding: '20px 0', borderBottom: i < steps.length - 1 ? '1px solid rgba(255,255,255,0.07)' : 'none' }}>
+          <span style={{ flexShrink: 0, width: 34, height: 34, borderRadius: '50%', background: hex(color, 0.15), color, display: 'grid', placeItems: 'center', fontWeight: 800, fontSize: 15, marginTop: 2 }}>{i + 1}</span>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontWeight: 700, fontSize: 18, color: '#f1f5f9', marginBottom: 6 }}>{s.t}</div>
+            <div style={{ fontSize: 15.5, color: '#aeb6c6', lineHeight: 1.75, maxWidth: 680 }}>{s.d}</div>
           </div>
-        ))}
-      </div>
-    </div>
+        </li>
+      ))}
+    </ol>
   )
 }
 
@@ -116,25 +83,15 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
 
         {/* Nasıl Çalışır — varyantlı */}
         <section style={{ marginBottom: 'clamp(44px,7vw,72px)' }}>
-          <h2 style={{ fontSize: 'clamp(22px,3.4vw,30px)', fontWeight: 800, letterSpacing: '-0.6px', margin: '0 0 22px' }}>Nasıl Çalışır?</h2>
-          <HowItWorks g={g} />
+          <h2 style={{ fontSize: 'clamp(22px,3.4vw,30px)', fontWeight: 800, letterSpacing: '-0.6px', margin: '0 0 10px' }}>Nasıl Çalışır?</h2>
+          <StepList steps={g.howItWorks} color={g.color} />
         </section>
 
         {/* Nasıl Kullanılır — adım adım */}
         <section style={{ marginBottom: 'clamp(44px,7vw,72px)' }}>
           <h2 style={{ fontSize: 'clamp(22px,3.4vw,30px)', fontWeight: 800, letterSpacing: '-0.6px', margin: '0 0 8px' }}>Nasıl Kullanılır?</h2>
-          <p style={{ color: '#8892a4', fontSize: 15, margin: '0 0 22px' }}>Birkaç adımda başlayın:</p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(230px,1fr))', gap: 14 }}>
-            {g.howToUse.map((s, i) => (
-              <div key={i} style={{ background: `linear-gradient(160deg,${hex(g.color, 0.08)},rgba(255,255,255,0.02))`, border: `1px solid ${hex(g.color, 0.2)}`, borderRadius: 16, padding: 20 }}>
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-                  <span style={{ width: 26, height: 26, borderRadius: 8, background: g.color, color: '#fff', display: 'grid', placeItems: 'center', fontSize: 13, fontWeight: 800 }}>{i + 1}</span>
-                  <span style={{ fontWeight: 700, fontSize: 15.5, color: '#f1f5f9' }}>{s.t}</span>
-                </div>
-                <div style={{ fontSize: 14, color: '#9aa3b4', lineHeight: 1.6 }}>{s.d}</div>
-              </div>
-            ))}
-          </div>
+          <p style={{ color: '#8892a4', fontSize: 15, margin: '0 0 8px' }}>Birkaç adımda başlayın:</p>
+          <StepList steps={g.howToUse} color={g.color} />
         </section>
 
         {/* Öne Çıkanlar */}
