@@ -10,11 +10,28 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   if (!user) redirect('/login')
 
-  const { data: profile } = await supabase
+  let { data: profile } = await supabase
     .from('profiles')
     .select('*, organizations(*)')
     .eq('id', user.id)
     .single()
+
+  // İlk giriş bootstrap: büro yoksa (örn. e-posta onayından sonra) metadata'dan oluştur
+  if (!profile?.organization_id) {
+    const meta = (user.user_metadata ?? {}) as Record<string, string>
+    const { data: claimed } = await supabase.rpc('claim_org_invite')
+    const joined = Array.isArray(claimed) ? claimed[0] : claimed
+    if (joined?.organization_id) {
+      await supabase.from('profiles').upsert({ id: user.id, organization_id: joined.organization_id, full_name: meta.full_name ?? null, bar_number: meta.bar_number || null, phone: meta.phone || null, locale: 'tr' })
+    } else {
+      const orgId = crypto.randomUUID()
+      const baseName = (meta.firm_name || meta.full_name || 'buro')
+      const slug = baseName.toLowerCase().replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's').replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c').replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') + '-' + Math.random().toString(36).slice(2, 6)
+      await supabase.from('organizations').insert({ id: orgId, name: meta.firm_name || `${meta.full_name ?? 'Yeni'} Hukuk Bürosu`, slug, subscription_tier: 'free', country_code: 'TR' })
+      await supabase.from('profiles').upsert({ id: user.id, organization_id: orgId, full_name: meta.full_name ?? null, bar_number: meta.bar_number || null, phone: meta.phone || null, role: 'admin', locale: 'tr' })
+    }
+    profile = (await supabase.from('profiles').select('*, organizations(*)').eq('id', user.id).single()).data
+  }
 
   // Büro hesabı (Kurumsal/enterprise tier) ise mola hatırlatıcısı ekip moduna geçer
   const org = profile?.organizations as { subscription_tier?: string } | null
