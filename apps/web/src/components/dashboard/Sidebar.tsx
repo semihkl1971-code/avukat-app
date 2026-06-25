@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import {
   LayoutDashboard, Gavel, Users, UsersRound, FileText, Calendar,
   MessageSquare, Sparkles, Landmark, Wallet, ShieldCheck, CreditCard,
-  Settings, LogOut, Scale, Bot,
+  Settings, LogOut, Scale, Bot, ShieldAlert,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -27,7 +27,7 @@ const NAV: { href: string; label: string; icon: LucideIcon }[] = [
   { href: '/dashboard/settings', label: 'Ayarlar', icon: Settings },
 ]
 
-export default function Sidebar({ profile }: { profile: Record<string, unknown> | null }) {
+export default function Sidebar({ profile, isOwner }: { profile: Record<string, unknown> | null; isOwner?: boolean }) {
   const pathname = usePathname()
   const router = useRouter()
 
@@ -85,6 +85,18 @@ export default function Sidebar({ profile }: { profile: Record<string, unknown> 
             </Link>
           )
         })}
+
+        {/* Yalnızca sistem sahibi görür */}
+        {isOwner && (() => {
+          const active = pathname.startsWith('/dashboard/admin')
+          return (
+            <Link href="/dashboard/admin" className="dash-nav" aria-current={active ? 'page' : undefined}
+              style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 12, padding: '10px 12px', marginTop: 8, borderRadius: 11, fontSize: 14, fontWeight: active ? 600 : 500, textDecoration: 'none', color: active ? '#fff' : '#fbbf24', background: active ? 'linear-gradient(135deg,rgba(245,158,11,0.22),rgba(249,115,22,0.12))' : 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.25)', boxShadow: active ? 'inset 3px 0 0 #f59e0b' : 'none' }}>
+              <ShieldAlert size={18} color={active ? '#fbbf24' : '#f59e0b'} strokeWidth={2} />
+              <span>Yönetici</span>
+            </Link>
+          )
+        })()}
       </nav>
 
       {/* Kullanıcı + çıkış */}
