@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import GmailCard from '@/components/dashboard/GmailCard'
 
 const SECTIONS = [
   { id: 'profile', label: 'Profil & Hesap', icon: '👤' },
@@ -115,8 +116,7 @@ export default function SettingsPage() {
               <div className="space-y-3">
                 {[
                   { name: 'UYAP', icon: '🏛', desc: 'Adalet Bakanlığı dava takip sistemi', status: 'Bağlı', color: 'text-green-400 bg-green-500/15' },
-                  { name: 'WhatsApp Business', icon: '💬', desc: 'Meta Cloud API mesajlaşma', status: 'Yapılandır', color: 'text-amber-400 bg-amber-500/15' },
-                  { name: 'Gmail', icon: '📧', desc: 'Google e-posta entegrasyonu', status: 'Yapılandır', color: 'text-amber-400 bg-amber-500/15' },
+                  { name: 'WhatsApp Business', icon: '💬', desc: 'Meta Cloud API mesajlaşma', status: 'Bağlı', color: 'text-green-400 bg-green-500/15' },
                 ].map(i => (
                   <div key={i.name} className="flex items-center justify-between p-4 rounded-lg border border-white/10">
                     <div className="flex items-center gap-3">
@@ -129,6 +129,7 @@ export default function SettingsPage() {
                     <span className={`text-xs font-medium px-2 py-1 rounded-full ${i.color}`}>{i.status}</span>
                   </div>
                 ))}
+                <GmailCard />
               </div>
             </div>
           )}

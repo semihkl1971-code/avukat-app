@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { getTier, caseUsage, whatsappUsage } from '@/lib/usage'
+import { gmailConfigured, accessToken, decrypt, sendGmail } from '@/lib/gmail'
 
 export interface FormState {
   error?: string
@@ -146,6 +147,22 @@ export async function sendMessage(_prev: FormState, formData: FormData): Promise
     }
   } else if (channel === 'whatsapp') {
     status = 'queued' // demo modu: gerçek gönderim için WHATSAPP_ACCESS_TOKEN gerekli
+  } else if (channel === 'gmail' && gmailConfigured()) {
+    // Gerçek Gmail gönderimi — kullanıcının bağlı hesabıyla
+    const { data: prof } = await ctx.supabase
+      .from('profiles')
+      .select('gmail_refresh_token_encrypted')
+      .eq('id', ctx.userId)
+      .single()
+    if (!prof?.gmail_refresh_token_encrypted) return { error: 'Gmail bağlı değil. Ayarlar → Gmail Bağla ile bağlayın.' }
+    let tok: string | null
+    try { tok = await accessToken(decrypt(prof.gmail_refresh_token_encrypted)) } catch { tok = null }
+    if (!tok) return { error: 'Gmail yetkisi yenilenemedi, tekrar bağlayın.' }
+    const r = await sendGmail(tok, to, str(formData, 'subject') ?? 'Avukatınızdan mesaj', body)
+    if (r.error) return { error: 'E-posta gönderilemedi: ' + r.error }
+    externalId = r.id ?? null
+  } else if (channel === 'gmail') {
+    status = 'queued' // Gmail yapılandırılmamış (env yok)
   }
 
   const { error } = await ctx.supabase.from('messages').insert({
@@ -155,6 +172,7 @@ export async function sendMessage(_prev: FormState, formData: FormData): Promise
     direction: 'outbound',
     external_message_id: externalId,
     to_address: to,
+    subject: channel === 'gmail' ? (str(formData, 'subject') ?? null) : null,
     body,
     status,
     sent_at: new Date().toISOString(),
