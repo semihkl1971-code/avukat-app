@@ -16,7 +16,22 @@ function sb() {
   return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
 }
 
-const BOT_SYSTEM = `Sen bir hukuk bürosunun WhatsApp asistanısın ("Avukatım"). Müvekkillere ve arayanlara kibar, kısa, yardımcı yanıt veriyorsun.
+export type BotKeyword = { keyword: string; reply: string }
+export type BotConfig = {
+  enabled?: boolean
+  firmName?: string
+  hours?: string
+  services?: string
+  keywords?: BotKeyword[]
+}
+
+// Büroya göre özelleştirilebilir sistem promptu
+function buildSystem(cfg: BotConfig): string {
+  const firm = cfg.firmName?.trim() || 'hukuk büromuz'
+  const hours = cfg.hours?.trim()
+  const services = cfg.services?.trim()
+  return `Sen "${firm}" adlı hukuk bürosunun WhatsApp asistanısın. Müvekkillere ve arayanlara kibar, kısa, yardımcı yanıt veriyorsun.
+${hours ? `\nÇalışma saatleri: ${hours}.` : ''}${services ? `\nBüronun başlıca çalışma alanları: ${services}.` : ''}
 
 Kurallar:
 - BAĞLAYICI hukuki görüş veya garanti VERME. Spesifik hukuki tavsiye/dava değerlendirmesi gerektiren konularda: "Bu konuda avukatımız en kısa sürede sizinle iletişime geçecek" de.
@@ -24,6 +39,44 @@ Kurallar:
 - Gerekirse bilgi iste (ad-soyad, konu, dosya no).
 - Türkçe, samimi ama profesyonel. WhatsApp mesajı gibi KISA (en fazla 2-3 cümle). Emoji çok az.
 - Acil/ciddi durumlarda doğrudan büroyu aramalarını öner.`
+}
+
+// Anahtar kelime eşleştirme — gelen metin bir anahtar kelimeyi içeriyorsa hazır yanıt
+function matchKeyword(text: string, keywords?: BotKeyword[]): string | null {
+  if (!keywords?.length) return null
+  const t = text.toLowerCase()
+  for (const k of keywords) {
+    const kw = k.keyword?.toLowerCase().trim()
+    if (kw && k.reply?.trim() && t.includes(kw)) return k.reply.trim()
+  }
+  return null
+}
+
+// Avukat devraldı mı? Son 12 saatte insan (is_auto=false) giden mesajı varsa bot susar.
+async function recentHumanReply(supabase: SupabaseClient, clientId: string): Promise<boolean> {
+  const since = new Date(Date.now() - 12 * 3600 * 1000).toISOString()
+  const { data, error } = await supabase
+    .from('messages')
+    .select('id')
+    .eq('client_id', clientId)
+    .eq('channel', 'whatsapp')
+    .eq('direction', 'outbound')
+    .eq('is_auto', false)
+    .gte('created_at', since)
+    .limit(1)
+  if (error) return false // is_auto kolonu henüz yoksa devralma kapalı
+  return (data?.length ?? 0) > 0
+}
+
+// Bot giden mesajını DB'ye yaz (is_auto=true); kolon yoksa zarif fallback
+async function insertBotOutbound(supabase: SupabaseClient, orgId: string, clientId: string, to: string, extId: string, body: string) {
+  const base = {
+    organization_id: orgId, client_id: clientId, channel: 'whatsapp', direction: 'outbound',
+    external_message_id: extId, to_address: `+${to}`, body, status: 'sent', sent_at: new Date().toISOString(),
+  }
+  const { error } = await supabase.from('messages').insert({ ...base, is_auto: true })
+  if (error) await supabase.from('messages').insert(base)
+}
 
 // WhatsApp düz metin gönder
 async function sendWaText(to: string, body: string): Promise<string | null> {
@@ -39,8 +92,8 @@ async function sendWaText(to: string, body: string): Promise<string | null> {
   return res.ok ? (d.messages?.[0]?.id ?? null) : null
 }
 
-// Bu müvekkilin son yazışmasını bağlam alıp AI yanıtı üret
-async function aiReply(supabase: SupabaseClient, clientId: string): Promise<string | null> {
+// Bu müvekkilin son yazışmasını bağlam alıp AI yanıtı üret (büroya göre özelleştirilmiş)
+async function aiReply(supabase: SupabaseClient, clientId: string, cfg: BotConfig): Promise<string | null> {
   if (!process.env.ANTHROPIC_API_KEY) return null
   const { data: history } = await supabase
     .from('messages')
@@ -59,7 +112,7 @@ async function aiReply(supabase: SupabaseClient, clientId: string): Promise<stri
     const res = await client.messages.create({
       model: 'claude-haiku-4-5-20251001',
       max_tokens: 320,
-      system: BOT_SYSTEM,
+      system: buildSystem(cfg),
       messages: msgs,
     })
     const blk = res.content.find(b => b.type === 'text') as { text: string } | undefined
@@ -156,23 +209,25 @@ export async function POST(req: NextRequest) {
       received_at: new Date().toISOString(),
     })
 
-    // Otomatik AI yanıtı (env WHATSAPP_AUTOREPLY=ai ise) — sadece metin mesajlarına
-    if (process.env.WHATSAPP_AUTOREPLY === 'ai' && type === 'text') {
-      const reply = await aiReply(supabase, client.id as string)
-      if (reply) {
-        const sentId = await sendWaText(from, reply)
-        if (sentId) {
-          await supabase.from('messages').insert({
-            organization_id: client.organization_id,
-            client_id: client.id,
-            channel: 'whatsapp',
-            direction: 'outbound',
-            external_message_id: sentId,
-            to_address: `+${from}`,
-            body: reply,
-            status: 'sent',
-            sent_at: new Date().toISOString(),
-          })
+    // Otomatik bot yanıtı — sadece metin mesajlarına
+    if (type === 'text' && text) {
+      // Büro bot ayarları (organizations.settings.whatsappBot)
+      const { data: org } = await supabase
+        .from('organizations')
+        .select('settings')
+        .eq('id', client.organization_id as string)
+        .single()
+      const cfg: BotConfig = ((org?.settings as Record<string, unknown>)?.['whatsappBot'] as BotConfig) ?? {}
+      // Açık mı? (org ayarı; yoksa eski env ile geri uyumluluk)
+      const enabled = cfg.enabled ?? (process.env.WHATSAPP_AUTOREPLY === 'ai')
+
+      if (enabled && !(await recentHumanReply(supabase, client.id as string))) {
+        // Önce anahtar kelime, yoksa AI
+        let reply = matchKeyword(text, cfg.keywords)
+        if (!reply) reply = await aiReply(supabase, client.id as string, cfg)
+        if (reply) {
+          const sentId = await sendWaText(from, reply)
+          if (sentId) await insertBotOutbound(supabase, client.organization_id as string, client.id as string, from, sentId, reply)
         }
       }
     }

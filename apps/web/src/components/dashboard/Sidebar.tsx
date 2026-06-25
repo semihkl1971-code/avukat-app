@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import {
   LayoutDashboard, Gavel, Users, UsersRound, FileText, Calendar,
   MessageSquare, Sparkles, Landmark, Wallet, ShieldCheck, CreditCard,
-  Settings, LogOut, Scale,
+  Settings, LogOut, Scale, Bot,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -18,6 +18,7 @@ const NAV: { href: string; label: string; icon: LucideIcon }[] = [
   { href: '/dashboard/documents', label: 'Belgeler', icon: FileText },
   { href: '/dashboard/calendar', label: 'Takvim', icon: Calendar },
   { href: '/dashboard/messages', label: 'Mesajlar', icon: MessageSquare },
+  { href: '/dashboard/whatsapp-bot', label: 'WhatsApp Bot', icon: Bot },
   { href: '/dashboard/ai-arama', label: 'AI Asistan', icon: Sparkles },
   { href: '/dashboard/uyap', label: 'UYAP', icon: Landmark },
   { href: '/dashboard/odemeler', label: 'Ödeme Takibi', icon: Wallet },
