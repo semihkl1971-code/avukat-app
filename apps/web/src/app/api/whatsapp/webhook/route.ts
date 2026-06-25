@@ -57,8 +57,17 @@ export async function POST(req: NextRequest) {
       : `[${type} mesajı]`
     if (!from) continue
 
-    // Müvekkili telefonla eşleştir (+90... ve 90... varyasyonları)
-    const candidates = [`+${from}`, from, `+${from.replace(/^90/, '')}`]
+    // Müvekkili telefonla eşleştir — Türkçe format varyasyonları
+    // WhatsApp 'from' = ülke koduyla, +'sız: örn "905383798186"
+    const natl = from.replace(/^90/, '') // ulusal kısım: "5383798186"
+    const candidates = Array.from(new Set([
+      `+${from}`,      // +905383798186
+      from,            // 905383798186
+      `+90${natl}`,    // +905383798186
+      `90${natl}`,     // 905383798186
+      `0${natl}`,      // 05383798186 (yerel)
+      natl,            // 5383798186
+    ]))
     const { data: client } = await supabase
       .from('clients')
       .select('id, organization_id')
