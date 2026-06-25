@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { getTier, caseUsage, whatsappUsage } from '@/lib/usage'
 
 export interface FormState {
   error?: string
@@ -66,6 +67,11 @@ export async function createCaseRecord(_prev: FormState, formData: FormData): Pr
   if (!title) return { error: 'Dava başlığı zorunludur.' }
   if (!client_id) return { error: 'Müvekkil seçilmelidir.' }
 
+  // Kullanım limiti — dava sayısı
+  const tier = await getTier(ctx.supabase, ctx.orgId)
+  const cu = await caseUsage(ctx.supabase, ctx.orgId, tier)
+  if (!cu.ok) return { error: `Dava limitiniz doldu (${cu.limit} dava). Yeni dava açmak için aboneliğinizi yükseltin → Abonelik sayfası.` }
+
   const nextHearing = str(formData, 'next_hearing_at')
 
   const { error } = await ctx.supabase.from('cases').insert({
@@ -112,6 +118,14 @@ export async function sendMessage(_prev: FormState, formData: FormData): Promise
     to = to ?? (channel === 'whatsapp' ? (c?.phone as string) : (c?.email as string))
   }
   if (!to) return { error: channel === 'whatsapp' ? 'Telefon numarası gerekli.' : 'E-posta adresi gerekli.' }
+
+  // Kullanım limiti — aylık WhatsApp (Solo'dan itibaren; free'de kapalı)
+  if (channel === 'whatsapp') {
+    const tier = await getTier(ctx.supabase, ctx.orgId)
+    const wu = await whatsappUsage(ctx.supabase, ctx.orgId, tier)
+    if (wu.limit === 0) return { error: 'WhatsApp mesajlaşma Solo ve üzeri planlarda. Aboneliğinizi yükseltin → Abonelik sayfası.' }
+    if (!wu.ok) return { error: `Bu ayki WhatsApp limitiniz doldu (${wu.limit}/ay). Daha fazlası için aboneliğinizi yükseltin → Abonelik sayfası.` }
+  }
 
   let status = 'sent'
   let externalId: string | null = null

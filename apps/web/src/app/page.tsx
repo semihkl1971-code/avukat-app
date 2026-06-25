@@ -82,9 +82,16 @@ const LIMIT_ROWS: { label: string; values: (string | boolean)[] }[] = [
 ]
 
 const FAQS = [
-  { q: 'UYAP entegrasyonu için ne gerekiyor?', a: 'UYAP e-imza sertifikanız ve baro sicil numaranız yeterli. Kurulum 5 dakikada tamamlanır. Yardım videolarımız adım adım anlatır.' },
-  { q: 'Verilerim güvende mi?', a: 'Tüm veriler AES-256 şifrelemesiyle saklanır. KVKK uyumlu altyapı ve Türkiye lokasyonlu sunucular kullanılır.' },
-  { q: 'İstediğim zaman iptal edebilir miyim?', a: 'Evet. Aylık planlarda bir sonraki döneme kadar, yıllık planlarda 30 gün içinde tam iade.' },
+  { q: 'Avukatım tam olarak ne işe yarar?', a: 'Avukatım; UYAP dava takibi, müvekkil ve dosya yönetimi, WhatsApp & Gmail iletişimi, yapay zeka hukuk asistanı, ödeme/tahsilat takibi ve ekip yönetimini tek platformda toplar. Büronuzun tüm operasyonunu web, masaüstü ve mobilden yönetirsiniz.' },
+  { q: 'Ücretsiz deneme var mı, kredi kartı gerekir mi?', a: '14 gün ücretsiz denersiniz, kredi kartı gerekmez. Ayrıca kalıcı bir Ücretsiz plan vardır (1 avukat, 10 dava). İstediğiniz zaman yükseltebilir veya iptal edebilirsiniz.' },
+  { q: 'Planlar ve kullanım limitleri nedir?', a: 'Ücretsiz: 10 dava, WhatsApp yok. Solo (₺799/ay): 100 dava, 250 WhatsApp/ay, UYAP tam erişim. Profesyonel (₺1.499/ay): sınırsız dava, 1.000 WhatsApp/ay, yapay zeka asistanı. Büro/Kurumsal (₺5.000+/ay): sınırsız, ekip yönetimi, 5.000+ WhatsApp/ay. Limit dolunca uyarı alır ve yükseltebilirsiniz.' },
+  { q: 'Limit dolarsa ne olur?', a: 'Örneğin Solo planda 250 WhatsApp mesajını kullandıysanız 251. mesaj durur ve "aboneliğinizi yükseltin" uyarısı çıkar. Verileriniz kaybolmaz; yükselttiğinizde kaldığınız yerden devam edersiniz.' },
+  { q: 'WhatsApp yapay zeka asistanı (bot) nasıl çalışır?', a: 'Müvekkiliniz WhatsApp\'tan yazınca yapay zeka anında, kibar ve güvenli yanıt verir; bilgi toplar, randevuya yönlendirir. Bağlayıcı hukuki görüş vermez. Bir avukat sohbete yanıt yazınca bot susar. WhatsApp asistanı Solo plandan itibaren kullanılabilir ve aylık WhatsApp hakkınızla sınırlıdır.' },
+  { q: 'Yapay zeka asistanı hangi konularda yardımcı olur?', a: 'Türk hukukuna (TMK, TBK, HMK, İİK, İş K. vb.) hâkim asistan; dilekçe taslağı, içtihat araştırması, dosya/sözleşme analizi ve strateji konusunda meslektaşınız gibi yanıt verir. Nihai sorumluluk dosyayı yürüten avukattadır.' },
+  { q: 'UYAP entegrasyonu için ne gerekiyor?', a: 'UYAP e-imza sertifikanız ve baro sicil numaranız yeterli. Kurulum 5 dakikada tamamlanır; sistem 30 dakikada bir otomatik senkronize olur, yeni gelişmelerde WhatsApp ve panel bildirimi gönderir.' },
+  { q: 'Verilerim güvende mi? (KVKK)', a: 'Tüm veriler AES-256 ile şifrelenir, aktarımda TLS kullanılır. KVKK uyumlu altyapı, Türkiye lokasyonlu sunucular, iki adımlı doğrulama ve erişim kayıtlarıyla korunur. Kimin neye eriştiği günlüğe işlenir.' },
+  { q: 'Web, masaüstü ve mobil — hepsi var mı?', a: 'Evet. Web tarayıcıdan çalışır; Windows ve macOS için masaüstü programı indirilebilir; Android uygulaması (APK) hazırdır, iOS sürümü yakında. Hepsi aynı hesapla senkron çalışır.' },
+  { q: 'İstediğim zaman iptal edebilir miyim?', a: 'Evet. Aylık planlarda bir sonraki döneme kadar kullanır, sonra iptal edersiniz. Sözleşme veya taahhüt yoktur; verilerinizi dışa aktarabilirsiniz.' },
 ]
 
 type Plan = { name: string; price: string; priceYearly: string; period: string; desc: string; features: string[]; disabled: string[]; addon?: string; cta: string; highlight: boolean }

@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import type { SubscriptionTier } from '@avukat/types'
 import { SUBSCRIPTION_LIMITS } from '@avukat/types'
+import { caseUsage, whatsappUsage, documentUsage, type Usage } from '@/lib/usage'
 import PlanButton from './PlanButton'
 
 const PLANS: Array<{
@@ -24,6 +25,21 @@ export default async function BillingPage({ searchParams }: { searchParams: Prom
   const { data: org } = await supabase.from('organizations').select('*').eq('id', profile!.organization_id).single()
 
   const currentTier = (org?.subscription_tier ?? 'free') as SubscriptionTier
+  const orgId = profile!.organization_id as string
+
+  // Mevcut kullanım (limit takibi)
+  const [cases, whatsapp, docs] = await Promise.all([
+    caseUsage(supabase, orgId, currentTier),
+    whatsappUsage(supabase, orgId, currentTier),
+    documentUsage(supabase, orgId, currentTier),
+  ])
+  const usageItems: { label: string; u: Usage; suffix: string }[] = [
+    { label: 'Dava', u: cases, suffix: '' },
+    { label: 'WhatsApp (bu ay)', u: whatsapp, suffix: '/ay' },
+    { label: 'Belge', u: docs, suffix: '' },
+  ]
+  const fmtLimit = (u: Usage) => (u.unlimited ? 'Sınırsız' : u.limit === 0 ? 'Kapalı' : String(u.limit))
+  const pct = (u: Usage) => (u.unlimited || u.limit <= 0 ? 0 : Math.min(100, Math.round((u.count / u.limit) * 100)))
 
   return (
     <div style={{ fontFamily: "'Inter','Segoe UI',sans-serif", borderRadius: 24, overflow: 'hidden', background: 'radial-gradient(1000px 500px at 50% -15%, rgba(108,99,255,0.22), transparent), linear-gradient(180deg,#0a0913,#07090f)', border: '1px solid rgba(108,99,255,0.18)', color: '#e8eaf0', minHeight: 'calc(100vh - 130px)' }}>
@@ -49,6 +65,34 @@ export default async function BillingPage({ searchParams }: { searchParams: Prom
             ✕ Ödeme tamamlanamadı. Lütfen tekrar deneyin veya farklı bir kart kullanın.
           </div>
         )}
+
+        {/* Mevcut kullanım */}
+        <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 18, padding: 22, marginBottom: 22 }}>
+          <h3 style={{ fontWeight: 700, color: '#f1f5f9', margin: '0 0 4px', fontSize: 16 }}>Bu dönemki kullanımınız</h3>
+          <p style={{ color: '#8892a4', fontSize: 13, margin: '0 0 18px' }}>Limit dolduğunda yeni kayıt/gönderim durur; aboneliğinizi yükselterek artırabilirsiniz.</p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))', gap: 18 }}>
+            {usageItems.map(({ label, u, suffix }) => {
+              const p = pct(u)
+              const full = !u.unlimited && u.limit > 0 && u.count >= u.limit
+              const near = p >= 80
+              const barColor = u.limit === 0 ? '#6b7280' : full ? '#ef4444' : near ? '#f59e0b' : '#1ec45f'
+              return (
+                <div key={label}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 7 }}>
+                    <span style={{ fontSize: 13.5, color: '#c4cfe0', fontWeight: 600 }}>{label}</span>
+                    <span style={{ fontSize: 13, color: full ? '#fca5a5' : '#8892a4' }}>
+                      {u.limit === 0 ? 'Plana dahil değil' : <>{u.count}<span style={{ color: '#6b7280' }}> / {fmtLimit(u)}{u.unlimited ? '' : suffix}</span></>}
+                    </span>
+                  </div>
+                  <div style={{ height: 8, borderRadius: 100, background: 'rgba(255,255,255,0.07)', overflow: 'hidden' }}>
+                    <div style={{ width: u.unlimited ? '12%' : `${p}%`, height: '100%', borderRadius: 100, background: u.unlimited ? 'linear-gradient(90deg,#6c63ff,#22d3ee)' : barColor, transition: 'width .4s' }} />
+                  </div>
+                  {full && <div style={{ fontSize: 11.5, color: '#fca5a5', marginTop: 5 }}>Limit doldu — yükseltin</div>}
+                </div>
+              )
+            })}
+          </div>
+        </div>
 
         {/* Planlar */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))', gap: 16, marginBottom: 22 }}>

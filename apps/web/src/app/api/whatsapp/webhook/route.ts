@@ -3,6 +3,8 @@ import { createClient } from '@supabase/supabase-js'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import Anthropic from '@anthropic-ai/sdk'
 import crypto from 'crypto'
+import { whatsappUsage } from '@/lib/usage'
+import type { SubscriptionTier } from '@avukat/types'
 
 export const runtime = 'nodejs'
 export const maxDuration = 30
@@ -214,14 +216,18 @@ export async function POST(req: NextRequest) {
       // Büro bot ayarları (organizations.settings.whatsappBot)
       const { data: org } = await supabase
         .from('organizations')
-        .select('settings')
+        .select('settings, subscription_tier')
         .eq('id', client.organization_id as string)
         .single()
       const cfg: BotConfig = ((org?.settings as Record<string, unknown>)?.['whatsappBot'] as BotConfig) ?? {}
+      const tier = ((org?.subscription_tier as SubscriptionTier) ?? 'free')
       // Açık mı? (org ayarı; yoksa eski env ile geri uyumluluk)
       const enabled = cfg.enabled ?? (process.env.WHATSAPP_AUTOREPLY === 'ai')
+      // Plan gereği WhatsApp hakkı (Solo'dan itibaren) ve aylık limit dolmamış olmalı
+      const usage = await whatsappUsage(supabase, client.organization_id as string, tier)
+      const withinPlan = usage.limit !== 0 && usage.ok
 
-      if (enabled && !(await recentHumanReply(supabase, client.id as string))) {
+      if (enabled && withinPlan && !(await recentHumanReply(supabase, client.id as string))) {
         // Önce anahtar kelime, yoksa AI
         let reply = matchKeyword(text, cfg.keywords)
         if (!reply) reply = await aiReply(supabase, client.id as string, cfg)
