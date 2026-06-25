@@ -11,7 +11,7 @@ const PLANS: Array<{
   popular?: boolean
 }> = [
   { tier: 'free', name: 'Ücretsiz', priceTRY: '₺0', priceUSD: '$0' },
-  { tier: 'starter', name: 'Başlangıç', priceTRY: '₺799/ay', priceUSD: '$29/mo' },
+  { tier: 'starter', name: 'Solo', priceTRY: '₺799/ay', priceUSD: '$29/mo' },
   { tier: 'pro', name: 'Profesyonel', priceTRY: '₺1.499/ay', priceUSD: '$54/mo', popular: true },
   { tier: 'enterprise', name: 'Büro / Kurumsal', priceTRY: '₺5.000+/ay', priceUSD: 'Contact Us' },
 ]
@@ -73,6 +73,10 @@ export default async function BillingPage({ searchParams }: { searchParams: Prom
                   <li style={{ color: limits.whatsappPerMonth === 0 ? '#4b5563' : '#9ca3af', textDecoration: limits.whatsappPerMonth === 0 ? 'line-through' : 'none' }}>
                     {limits.whatsappPerMonth === 0 ? '✗ WhatsApp' : limits.whatsappPerMonth === -1 ? '✓ WhatsApp Sınırsız' : `✓ WhatsApp ${limits.whatsappPerMonth}/ay`}
                   </li>
+                  <li style={{ color: limits.aiAssistant ? '#9ca3af' : '#4b5563', textDecoration: limits.aiAssistant ? 'none' : 'line-through' }}>
+                    {limits.aiAssistant ? '✓ Yapay Zeka Asistan' : '✗ Yapay Zeka Asistan'}
+                  </li>
+                  <li>✓ {limits.storageGB} GB Depolama</li>
                 </ul>
 
                 {!isCurrent && (

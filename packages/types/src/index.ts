@@ -9,13 +9,18 @@ export interface SubscriptionLimits {
   maxDocuments: number
   uyapAccess: 'none' | 'read' | 'full'
   whatsappPerMonth: number
+  aiAssistant: boolean
+  storageGB: number
 }
 
+// Plan adları (vitrin): free=Ücretsiz, starter=Solo, pro=Profesyonel, enterprise=Büro
+// Solo→Profesyonel arası kullanıcı, kendi planındaki tüm hakları rahatça kullanır.
+// (-1 = sınırsız)
 export const SUBSCRIPTION_LIMITS: Record<SubscriptionTier, SubscriptionLimits> = {
-  free: { maxLawyers: 1, maxCases: 10, maxDocuments: 100, uyapAccess: 'none', whatsappPerMonth: 0 },
-  starter: { maxLawyers: 3, maxCases: 100, maxDocuments: 1000, uyapAccess: 'read', whatsappPerMonth: 100 },
-  pro: { maxLawyers: 10, maxCases: -1, maxDocuments: -1, uyapAccess: 'full', whatsappPerMonth: 1000 },
-  enterprise: { maxLawyers: -1, maxCases: -1, maxDocuments: -1, uyapAccess: 'full', whatsappPerMonth: -1 },
+  free:       { maxLawyers: 1,  maxCases: 10,  maxDocuments: 100,  uyapAccess: 'none', whatsappPerMonth: 0,    aiAssistant: false, storageGB: 5 },
+  starter:    { maxLawyers: 1,  maxCases: 100, maxDocuments: 1000, uyapAccess: 'full', whatsappPerMonth: 250,  aiAssistant: false, storageGB: 50 },
+  pro:        { maxLawyers: 3,  maxCases: -1,  maxDocuments: -1,   uyapAccess: 'full', whatsappPerMonth: 1000, aiAssistant: true,  storageGB: 150 },
+  enterprise: { maxLawyers: 10, maxCases: -1,  maxDocuments: -1,   uyapAccess: 'full', whatsappPerMonth: 5000, aiAssistant: true,  storageGB: 500 },
 }
 
 export function checkFeature(tier: SubscriptionTier, feature: keyof SubscriptionLimits): SubscriptionLimits[typeof feature] {

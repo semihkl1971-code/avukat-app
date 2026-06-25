@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
-import { LandingStyles, LandingReveal, HeroBackdrop, QuickFeatures, GlobeSection, PeopleSection, CourtroomSection, PhoneMockup, FeatureVisual } from '@/components/landing/Animations'
+import { LandingStyles, LandingReveal, HeroBackdrop, QuickFeatures, GlobeSection, PeopleSection, CourtroomSection, FeatureVisual } from '@/components/landing/Animations'
 
 import { GUIDES } from '@/lib/feature-guides'
 
@@ -55,8 +55,8 @@ const TESTIMONIALS = [
 
 // Bireysel avukatlar için planlar — yıllık = aylık ×10 (2 ay bedava)
 const PLANS: Plan[] = [
-  { name: 'Ücretsiz', price: '₺0', priceYearly: '₺0', period: '/ay', desc: 'Bireysel başlangıç', features: ['1 Avukat', '10 Dava', '100 Belge', 'Mobil uygulama'], disabled: ['UYAP', 'WhatsApp/Gmail', 'AI Asistan'], cta: 'Ücretsiz Başla', highlight: false },
-  { name: 'Solo', price: '₺799', priceYearly: '₺7.990', period: '/ay', desc: 'Tek çalışan avukatlar', features: ['1 Avukat', '100 Dava', '1.000 Belge', 'UYAP tam (okuma + e-takip)', '250 WhatsApp/ay', 'Mobil uygulama'], disabled: ['AI Asistan', 'Çoklu avukat'], cta: 'Hemen Başla', highlight: false },
+  { name: 'Ücretsiz', price: '₺0', priceYearly: '₺0', period: '/ay', desc: 'Bireysel başlangıç', features: ['1 Avukat', '10 Dava', '100 Belge'], disabled: ['UYAP', 'WhatsApp/Gmail', 'AI Asistan'], cta: 'Ücretsiz Başla', highlight: false },
+  { name: 'Solo', price: '₺799', priceYearly: '₺7.990', period: '/ay', desc: 'Tek çalışan avukatlar', features: ['1 Avukat', '100 Dava', '1.000 Belge', 'UYAP tam (okuma + e-takip)', '250 WhatsApp/ay'], disabled: ['AI Asistan', 'Çoklu avukat'], cta: 'Hemen Başla', highlight: false },
   { name: 'Profesyonel', price: '₺1.499', priceYearly: '₺14.990', period: '/ay', desc: 'Yoğun çalışan avukatlar & küçük ekipler', features: ['3 Avukat', 'Sınırsız Dava', 'Sınırsız Belge', 'UYAP tam erişim', '1.000 WhatsApp/ay', 'Yapay zeka asistan'], disabled: [], addon: 'Ek avukat +₺450/ay', cta: 'En Popüler', highlight: true },
 ]
 
@@ -67,11 +67,23 @@ const BURO_PLANS: Plan[] = [
   { name: 'Kurumsal', price: 'Teklif', priceYearly: 'Teklif', period: '', desc: 'Büyük şirketler & barolar', features: ['Sınırsız avukat', 'Özel UYAP SLA', 'Özel entegrasyon', 'Adanmış hesap yöneticisi', 'On-premise seçeneği'], disabled: [], cta: 'İletişime Geçin', highlight: false },
 ]
 
+// Paket bazlı kullanım hakları — vitrin karşılaştırma matrisi
+const LIMIT_COLS = ['Ücretsiz', 'Solo', 'Profesyonel', 'Büro', 'Büro Pro', 'Kurumsal']
+const LIMIT_ROWS: { label: string; values: (string | boolean)[] }[] = [
+  { label: 'Avukat (kullanıcı)',       values: ['1', '1', '3 + ek', '10 + ek', '25 + ek', 'Sınırsız'] },
+  { label: 'Aktif dava',               values: ['10', '100', 'Sınırsız', 'Sınırsız', 'Sınırsız', 'Sınırsız'] },
+  { label: 'Belge',                    values: ['100', '1.000', 'Sınırsız', 'Sınırsız', 'Sınırsız', 'Sınırsız'] },
+  { label: 'UYAP entegrasyonu',        values: [false, 'Tam', 'Tam', 'Tam', 'Öncelikli SLA', 'Özel SLA'] },
+  { label: 'WhatsApp / ay',            values: [false, '250', '1.000', '5.000', 'Sınırsız', 'Sınırsız'] },
+  { label: 'Yapay zeka asistan',       values: [false, false, true, true, true, true] },
+  { label: 'Depolama',                 values: ['5 GB', '50 GB', '150 GB', '500 GB', '1 TB', 'Özel'] },
+  { label: 'Öncelikli destek',         values: [false, false, true, true, '7/24', 'Özel'] },
+]
+
 const FAQS = [
   { q: 'UYAP entegrasyonu için ne gerekiyor?', a: 'UYAP e-imza sertifikanız ve baro sicil numaranız yeterli. Kurulum 5 dakikada tamamlanır. Yardım videolarımız adım adım anlatır.' },
   { q: 'Verilerim güvende mi?', a: 'Tüm veriler AES-256 şifrelemesiyle saklanır. KVKK uyumlu altyapı ve Türkiye lokasyonlu sunucular kullanılır.' },
   { q: 'İstediğim zaman iptal edebilir miyim?', a: 'Evet. Aylık planlarda bir sonraki döneme kadar, yıllık planlarda 30 gün içinde tam iade.' },
-  { q: 'Mobil uygulama var mı?', a: 'Android uygulamamız hazır ve doğrudan APK ile ücretsiz kurulur; tüm planlara dahildir. iOS sürümü yakında App Store\'da olacak.' },
 ]
 
 type Plan = { name: string; price: string; priceYearly: string; period: string; desc: string; features: string[]; disabled: string[]; addon?: string; cta: string; highlight: boolean }
@@ -439,6 +451,43 @@ export default function LandingPage() {
           <div className="price-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
             {BURO_PLANS.map(renderPlan)}
           </div>
+
+          {/* Paket bazlı kullanım hakları matrisi */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '56px 0 20px' }}>
+            <h3 style={{ fontSize: 20, fontWeight: 800, color: '#f1f5f9', margin: 0 }}>Kullanım Hakları</h3>
+            <span style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.08)' }} />
+          </div>
+          <div style={{ overflowX: 'auto', borderRadius: 16, border: '1px solid rgba(255,255,255,0.08)' }}>
+            <table style={{ width: '100%', minWidth: 760, borderCollapse: 'collapse', fontSize: 13 }}>
+              <thead>
+                <tr>
+                  <th style={{ textAlign: 'left', padding: '14px 16px', color: '#9ca3af', fontWeight: 600, background: 'rgba(255,255,255,0.02)', position: 'sticky', left: 0 }}>Özellik</th>
+                  {LIMIT_COLS.map((c, i) => {
+                    const hot = i === 1 || i === 2
+                    return <th key={c} style={{ padding: '14px 12px', textAlign: 'center', fontWeight: 700, color: hot ? '#c4b5fd' : '#e8eaf0', background: hot ? 'rgba(108,99,255,0.10)' : 'rgba(255,255,255,0.02)', whiteSpace: 'nowrap' }}>{c}</th>
+                  })}
+                </tr>
+              </thead>
+              <tbody>
+                {LIMIT_ROWS.map((row, ri) => (
+                  <tr key={row.label} style={{ borderTop: '1px solid rgba(255,255,255,0.06)', background: ri % 2 ? 'rgba(255,255,255,0.012)' : 'transparent' }}>
+                    <td style={{ padding: '12px 16px', color: '#aeb6c6', fontWeight: 500, position: 'sticky', left: 0, background: '#0a0c12' }}>{row.label}</td>
+                    {row.values.map((v, ci) => {
+                      const hot = ci === 1 || ci === 2
+                      const cell = v === true
+                        ? <span style={{ color: '#22c55e', fontWeight: 700 }}>✓</span>
+                        : v === false
+                          ? <span style={{ color: '#3f4453' }}>✕</span>
+                          : <span style={{ color: '#e8eaf0' }}>{v}</span>
+                      return <td key={ci} style={{ padding: '12px', textAlign: 'center', background: hot ? 'rgba(108,99,255,0.05)' : 'transparent' }}>{cell}</td>
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p style={{ fontSize: 12.5, color: '#6b7280', marginTop: 12 }}>&quot;+ ek&quot; = koltuk başına ek avukat eklenebilir.</p>
+
           <div style={{ marginTop: 32, background: 'rgba(108,99,255,0.06)', border: '1px solid rgba(108,99,255,0.15)', borderRadius: 16, padding: '18px 28px', display: 'flex', alignItems: 'center', gap: 18, flexWrap: 'wrap' }}>
             <span style={{ fontSize: 26 }}>🇹🇷</span>
             <div><div style={{ fontWeight: 700, color: '#e2e8f0', fontSize: 14 }}>PayTR ile güvenli ödeme</div><div style={{ color: '#6b7280', fontSize: 13, marginTop: 4 }}>Türk avukatlar için TRY cinsinden 3D Secure ödeme; tüm kartlar ve taksit desteği.</div></div>
@@ -513,31 +562,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ═══════════ BÖLÜM 10 — MOBİL UYGULAMA ═══════════ */}
-      <section id="mobil" style={{ padding: '70px 24px', borderTop: '1px solid rgba(255,255,255,0.05)', background: 'rgba(255,255,255,0.015)' }}>
-        <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center' }}>
-          <div style={{ fontSize: 12, fontWeight: 700, color: '#6c63ff', letterSpacing: '1.5px', marginBottom: 12 }}>HER YERDE YANINIZDA</div>
-          <h2 style={{ fontSize: 'clamp(26px,4vw,38px)', fontWeight: 800, letterSpacing: '-1px', margin: '0 0 14px' }}>Mobil Uygulamayı İndirin</h2>
-          <p style={{ color: '#aeb6c6', fontSize: 16, lineHeight: 1.7, maxWidth: 520, margin: '0 auto 8px', fontWeight: 500 }}>iOS ve Android için Avukatım uygulaması tüm planlara dahildir. Davalarınızı, mesajlarınızı ve duruşmalarınızı cebinizden takip edin.</p>
-          <PhoneMockup />
-          <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap', marginTop: 24 }}>
-            {/* Android — doğrudan APK (şimdi çalışıyor) */}
-            <a href="https://expo.dev/artifacts/eas/ZDUrcr_ndI77qRpa6gTqBIku34AYvGBqExoU_lOQi6I.apk" style={{ display: 'inline-flex', alignItems: 'center', gap: 12, background: 'linear-gradient(135deg,#0d8b3d,#1ec45f)', border: '1px solid rgba(46,196,95,0.5)', borderRadius: 12, padding: '11px 22px', textDecoration: 'none', minWidth: 210, boxShadow: '0 8px 24px rgba(30,196,95,0.25)' }}>
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="#fff"><path d="M17.6 9.48l1.84-3.18a.4.4 0 10-.69-.4l-1.86 3.23a11.4 11.4 0 00-9.78 0L5.25 5.9a.4.4 0 10-.69.4L6.4 9.48A10.8 10.8 0 001 18h22a10.8 10.8 0 00-5.4-8.52zM7 15.25a1.25 1.25 0 110-2.5 1.25 1.25 0 010 2.5zm10 0a1.25 1.25 0 110-2.5 1.25 1.25 0 010 2.5z"/></svg>
-              <span style={{ textAlign: 'left' }}><span style={{ display: 'block', fontSize: 10, color: 'rgba(255,255,255,0.85)' }}>Android için</span><span style={{ display: 'block', fontSize: 17, fontWeight: 700, color: '#fff' }}>APK İndir</span></span>
-            </a>
-            {/* App Store — yakında (iOS sürümü henüz yayında değil) */}
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 12, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 12, padding: '11px 22px', minWidth: 210, opacity: 0.65 }}>
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="#9ca3af"><path d="M17.05 12.04c-.03-2.6 2.13-3.85 2.23-3.91-1.22-1.78-3.11-2.02-3.78-2.05-1.61-.16-3.14.95-3.96.95-.81 0-2.07-.93-3.41-.9-1.75.03-3.37 1.02-4.27 2.59-1.82 3.16-.47 7.84 1.31 10.41.87 1.26 1.9 2.67 3.26 2.62 1.31-.05 1.8-.85 3.39-.85 1.58 0 2.03.85 3.41.82 1.41-.02 2.3-1.28 3.16-2.55 1-1.46 1.41-2.87 1.43-2.95-.03-.01-2.74-1.05-2.77-4.17l.27-.36zM14.5 4.6c.72-.87 1.2-2.08 1.07-3.29-1.03.04-2.28.69-3.02 1.56-.66.77-1.24 2-1.08 3.18 1.15.09 2.32-.58 3.03-1.45z"/></svg>
-              <span style={{ textAlign: 'left' }}><span style={{ display: 'block', fontSize: 10, color: '#9ca3af' }}>App Store</span><span style={{ display: 'block', fontSize: 17, fontWeight: 700, color: '#cbd5e1' }}>Yakında</span></span>
-            </div>
-          </div>
-          <p style={{ marginTop: 18, fontSize: 15, color: '#aeb6c6', lineHeight: 1.7, maxWidth: 520, marginLeft: 'auto', marginRight: 'auto', fontWeight: 500 }}>📲 Android 8+ için APK ile doğrudan kurulum · iOS sürümü yakında · Türk hukuku için optimize</p>
-          <div className="la-reveal" style={{ maxWidth: 540, margin: '28px auto 0', borderRadius: 20, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 30px 80px rgba(0,0,0,0.5)', aspectRatio: '16/9' }}>
-            <video src="/videos/mobil-kullanim.mp4" autoPlay muted loop playsInline preload="metadata" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-          </div>
-        </div>
-      </section>
 
       {/* ═══════════ FOOTER ═══════════ */}
       <footer style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: '56px clamp(20px,5vw,48px) 32px', background: '#05060b' }}>
@@ -562,7 +586,7 @@ export default function LandingPage() {
             <div>
               <div style={{ fontSize: 12, fontWeight: 700, color: '#e2e8f0', letterSpacing: '0.5px', marginBottom: 14 }}>ÜRÜN</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
-                {[['Özellikler', '#features'], ['Videolar', '#videos'], ['Fiyatlar', '#pricing'], ['Masaüstü Uygulaması', '#masaustu'], ['Mobil Uygulama', '#mobil'], ['Demo', '/demo']].map(([l, h]) => (
+                {[['Özellikler', '#features'], ['Videolar', '#videos'], ['Fiyatlar', '#pricing'], ['Masaüstü Uygulaması', '#masaustu'], ['Demo', '/demo']].map(([l, h]) => (
                   <a key={l} href={h} style={{ color: '#6b7280', fontSize: 13, textDecoration: 'none' }}>{l}</a>
                 ))}
               </div>

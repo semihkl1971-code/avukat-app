@@ -38,7 +38,7 @@ export default function Sidebar({ profile }: { profile: Record<string, unknown> 
 
   const org = profile?.organizations as Record<string, unknown> | null
   const tier = (org?.subscription_tier as string) ?? 'free'
-  const TIER_LABEL: Record<string, string> = { free: 'Ücretsiz', starter: 'Başlangıç', pro: 'Profesyonel', enterprise: 'Kurumsal' }
+  const TIER_LABEL: Record<string, string> = { free: 'Ücretsiz', starter: 'Solo', pro: 'Profesyonel', enterprise: 'Kurumsal' }
 
   return (
     <aside style={{ width: 240, flexShrink: 0, display: 'flex', flexDirection: 'column', background: 'linear-gradient(180deg,#0b0d18,#08090f)', borderRight: '1px solid rgba(255,255,255,0.06)', color: '#e8eaf0', fontFamily: "'Inter','Segoe UI',sans-serif" }}>
