@@ -17,7 +17,7 @@ export type FeatureGuide = {
   howItWorks: Step[]     // Nasıl çalışır
   howToUse: Step[]       // Nasıl kullanılır (adım adım)
   highlights: Highlight[]
-  variant: 'timeline' | 'cards' | 'split'
+  variant?: 'timeline' | 'cards' | 'split'
 }
 
 export const GUIDES: FeatureGuide[] = [
@@ -188,6 +188,87 @@ export const GUIDES: FeatureGuide[] = [
       { t: 'KVKK + TR sunucu', d: 'Yasal uyum' },
     ],
     variant: 'split',
+  },
+  {
+    slug: 'mobil',
+    name: 'Mobil Uygulama',
+    tag: 'HER YERDE YANINIZDA',
+    title: 'Mobil Uygulama (Android)',
+    color: '#1ec45f', color2: '#0d8b3d', icon: 'smartphone',
+    summary: 'Davalar, mesajlar ve duruşmalar cebinizde. Android APK ile internet olan her yerde, bilgisayara bağlı kalmadan.',
+    whatIs: 'Avukatım mobil uygulaması, panelin cepteki halidir. Davalarınızı, müvekkillerinizi, takviminizi ve AI asistanı telefonunuzdan kullanırsınız. Şu an Android için doğrudan APK ile kurulur; iOS sürümü yakında. Uygulama canlı sunucuya bağlıdır, verileriniz web ile aynıdır.',
+    howItWorks: [
+      { t: 'Canlı sunucuya bağlı', d: 'Uygulama web ile aynı veritabanını kullanır; telefonda yaptığınız değişiklik panelde de görünür.' },
+      { t: 'Güvenli giriş', d: 'Aynı hesabınızla girersiniz; oturum telefonda güvenli (SecureStore) saklanır.' },
+      { t: 'Bildirimler', d: 'Duruşma ve önemli gelişmeler için telefonunuza bildirim düşer.' },
+      { t: 'Çevrimiçi çalışma', d: 'İnternet olan her yerde; ofise veya bilgisayara bağlı kalmazsınız.' },
+    ],
+    howToUse: [
+      { t: 'APK\'yı indirin', d: 'Ana sayfadaki "APK İndir" butonundan veya bize ulaşıp bağlantıyı telefonunuzda açın.' },
+      { t: 'Kurulum izni verin', d: 'Android "bilinmeyen kaynak" sorarsa izin verin (uygulama güvenlidir), kurun.' },
+      { t: 'Giriş yapın', d: 'Web ile aynı e-posta/şifrenizle girin.' },
+      { t: 'Kullanmaya başlayın', d: 'Alt menüden davalar, müvekkiller, takvim, mesajlar ve AI asistana erişin.' },
+    ],
+    highlights: [
+      { t: 'Android APK', d: 'Doğrudan kurulum' },
+      { t: 'AI asistan', d: 'Cepten hukuki yanıt' },
+      { t: 'Bildirimler', d: 'Duruşma hatırlatma' },
+      { t: 'iOS yakında', d: 'App Store için hazırlık' },
+    ],
+  },
+  {
+    slug: 'masaustu',
+    name: 'Masaüstü Uygulaması',
+    tag: 'BİLGİSAYARINIZA KURUN',
+    title: 'Masaüstü Uygulaması (Windows & macOS)',
+    color: '#6c63ff', color2: '#8b80ff', icon: 'monitor',
+    summary: 'Avukatım\'ı bir program gibi bilgisayarınıza kurun — ayrı pencere, hızlı erişim, masaüstü deneyimi.',
+    whatIs: 'Masaüstü uygulaması, Avukatım\'ı tarayıcı sekmesi aramadan, ayrı bir program penceresinde kullanmanızı sağlar. Windows (.exe) ve macOS (.dmg) için indirilebilir; canlı sunucuya bağlıdır, verileriniz web ile aynıdır. Başlat menüsü / Dock kısayolu oluşur.',
+    howItWorks: [
+      { t: 'Native pencere', d: 'Uygulama, web sürümünü kendi penceresinde açar; sekme karmaşası olmaz.' },
+      { t: 'Canlı bağlantı', d: 'Web ile aynı veritabanı; nerede çalışırsanız çalışın veriler senkron.' },
+      { t: 'Hızlı erişim', d: 'Masaüstü/Başlat menüsü kısayoluyla tek tıkla açılır.' },
+      { t: 'Otomatik giriş', d: 'Oturumunuz hatırlanır; her seferinde yeniden giriş gerekmez.' },
+    ],
+    howToUse: [
+      { t: 'Sürümünüzü indirin', d: 'Ana sayfadaki "Masaüstü" bölümünden Windows (.exe) veya macOS (.dmg) dosyasını indirin.' },
+      { t: 'Kurun', d: 'İndirilen dosyayı çalıştırıp kurulum sihirbazını tamamlayın.' },
+      { t: 'Açın', d: 'Masaüstü/Başlat menüsü kısayolundan Avukatım\'ı başlatın.' },
+      { t: 'Giriş yapın', d: 'Hesabınızla girin; artık ayrı bir program gibi kullanın.' },
+    ],
+    highlights: [
+      { t: 'Windows .exe', d: 'Tek tıkla kurulum' },
+      { t: 'macOS .dmg', d: 'Apple Silicon' },
+      { t: 'Ayrı pencere', d: 'Sekme aramaya son' },
+      { t: 'Canlı senkron', d: 'Web ile aynı veri' },
+    ],
+  },
+  {
+    slug: 'ekip',
+    name: 'Ekip Yönetimi',
+    tag: 'BÜRO & EKİP',
+    title: 'Ekip Yönetimi',
+    color: '#f59e0b', color2: '#f97316', icon: 'users',
+    summary: 'Büronuza avukat ve asistan davet edin, rol & yetki verin; herkes aynı dosyalarda güvenle çalışsın.',
+    whatIs: 'Ekip Yönetimi, hukuk bürolarının birden çok kullanıcıyı tek hesapta yönetmesini sağlar. E-posta ile davet gönderir, her üyeye rol (yönetici / avukat / asistan) atarsınız. Roller, kimin neyi görüp değiştirebileceğini belirler. Koltuk (üye) limiti abonelik planınıza bağlıdır.',
+    howItWorks: [
+      { t: 'Davet', d: 'Üyeyi e-posta ve rolüyle davet edersiniz; davet bağlantısıyla büronuza katılır.' },
+      { t: 'Rol & yetki', d: 'Yönetici tüm yetkilere sahiptir; avukat ve asistan rolleri sınırlı erişir.' },
+      { t: 'Ortak çalışma', d: 'Tüm ekip aynı dava ve müvekkil dosyalarında gerçek zamanlı çalışır.' },
+      { t: 'Koltuk limiti', d: 'Eklenebilecek üye sayısı abonelik planınızla belirlenir; yükseltebilirsiniz.' },
+    ],
+    howToUse: [
+      { t: 'Ekip sayfasını açın', d: 'Panel → Ekip sekmesine girin (yönetici yetkisi gerekir).' },
+      { t: 'Üye davet edin', d: '"Davet Et" ile e-posta ve rol seçip gönderin.' },
+      { t: 'Rolleri yönetin', d: 'Mevcut üyelerin rolünü değiştirin veya üyeyi çıkarın.' },
+      { t: 'Birlikte çalışın', d: 'Davet kabul edilince üye büronuzdaki dosyalara rolüne göre erişir.' },
+    ],
+    highlights: [
+      { t: 'E-posta daveti', d: 'Hızlı katılım' },
+      { t: 'Rol & yetki', d: 'Yönetici/avukat/asistan' },
+      { t: 'Ortak dosyalar', d: 'Gerçek zamanlı' },
+      { t: 'Koltuk limiti', d: 'Plana göre' },
+    ],
   },
 ]
 

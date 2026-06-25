@@ -2,14 +2,15 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import {
   Landmark, MessageSquare, Sparkles, Folder, Wallet, ShieldCheck,
-  ArrowLeft, Check, ArrowRight,
+  Smartphone, Monitor, Users, ArrowLeft, Check, ArrowRight,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
-import { GUIDES, GUIDE_MAP, type FeatureGuide } from '@/lib/feature-guides'
+import { GUIDES, GUIDE_MAP } from '@/lib/feature-guides'
 
 const ICONS: Record<string, LucideIcon> = {
   landmark: Landmark, 'message-square': MessageSquare, sparkles: Sparkles,
   folder: Folder, wallet: Wallet, 'shield-check': ShieldCheck,
+  smartphone: Smartphone, monitor: Monitor, users: Users,
 }
 
 export function generateStaticParams() {

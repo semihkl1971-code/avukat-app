@@ -16,9 +16,6 @@ interface BIPEvent extends Event { prompt: () => Promise<void>; userChoice: Prom
 //  MEDYA — Google Flow ile üretilen tanıtım videoları (apps/web/public/videos/).
 //  Yeni video eklemek için dosyayı public/videos/ klasörüne atıp yolunu yazın.
 // ════════════════════════════════════════════════════════════════════════════
-const HERO_VIDEO = '/videos/tanitim.mp4'
-const HERO_POSTER = '/posters/tanitim.jpg'
-
 const TUTORIALS = [
   { title: 'UYAP ile Dava Takibi', duration: '0:08', poster: '/posters/dava-takip.jpg', video: '/videos/dava-takip.mp4' },
   { title: 'WhatsApp & Gmail Birleşik Gelen Kutusu', duration: '0:08', poster: '/posters/birlesik-iletisim.jpg', video: '/videos/birlesik-iletisim.mp4' },
@@ -74,7 +71,7 @@ const FAQS = [
   { q: 'UYAP entegrasyonu için ne gerekiyor?', a: 'UYAP e-imza sertifikanız ve baro sicil numaranız yeterli. Kurulum 5 dakikada tamamlanır. Yardım videolarımız adım adım anlatır.' },
   { q: 'Verilerim güvende mi?', a: 'Tüm veriler AES-256 şifrelemesiyle saklanır. KVKK uyumlu altyapı ve Türkiye lokasyonlu sunucular kullanılır.' },
   { q: 'İstediğim zaman iptal edebilir miyim?', a: 'Evet. Aylık planlarda bir sonraki döneme kadar, yıllık planlarda 30 gün içinde tam iade.' },
-  { q: 'Mobil uygulama var mı?', a: 'Evet, iOS ve Android uygulamalarımız tüm planlara dahildir ve ücretsiz indirilebilir.' },
+  { q: 'Mobil uygulama var mı?', a: 'Android uygulamamız hazır ve doğrudan APK ile ücretsiz kurulur; tüm planlara dahildir. iOS sürümü yakında App Store\'da olacak.' },
 ]
 
 type Plan = { name: string; price: string; priceYearly: string; period: string; desc: string; features: string[]; disabled: string[]; addon?: string; cta: string; highlight: boolean }
