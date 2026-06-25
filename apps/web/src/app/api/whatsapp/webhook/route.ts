@@ -1,15 +1,72 @@
 import { NextRequest } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import type { SupabaseClient } from '@supabase/supabase-js'
+import Anthropic from '@anthropic-ai/sdk'
 import crypto from 'crypto'
 
 export const runtime = 'nodejs'
+export const maxDuration = 30
 
 // Meta (WhatsApp Cloud API) webhook — gelen mesajları alır, müvekkile eşleyip DB'ye yazar.
-// Gönderme tarafı: dashboard/actions.ts `sendMessage`. Bu route sadece GELEN mesajlar içindir.
-// Gerekli env (Vercel): WHATSAPP_VERIFY_TOKEN, META_APP_SECRET, SUPABASE_SERVICE_ROLE_KEY.
+// Otomatik AI yanıtı: env WHATSAPP_AUTOREPLY=ai ise gelen mesaja chatbot cevap verir.
+// Gerekli env (Vercel): WHATSAPP_VERIFY_TOKEN, WHATSAPP_ACCESS_TOKEN, WHATSAPP_PHONE_ID,
+//   ANTHROPIC_API_KEY (autoreply için), META_APP_SECRET (ops.), SUPABASE_SERVICE_ROLE_KEY.
 
 function sb() {
   return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
+}
+
+const BOT_SYSTEM = `Sen bir hukuk bürosunun WhatsApp asistanısın ("Avukatım"). Müvekkillere ve arayanlara kibar, kısa, yardımcı yanıt veriyorsun.
+
+Kurallar:
+- BAĞLAYICI hukuki görüş veya garanti VERME. Spesifik hukuki tavsiye/dava değerlendirmesi gerektiren konularda: "Bu konuda avukatımız en kısa sürede sizinle iletişime geçecek" de.
+- Randevu talebi, dosya/dava durumu sorusu, çalışma saatleri, genel bilgilendirme, iletişim gibi konularda yardımcı ol.
+- Gerekirse bilgi iste (ad-soyad, konu, dosya no).
+- Türkçe, samimi ama profesyonel. WhatsApp mesajı gibi KISA (en fazla 2-3 cümle). Emoji çok az.
+- Acil/ciddi durumlarda doğrudan büroyu aramalarını öner.`
+
+// WhatsApp düz metin gönder
+async function sendWaText(to: string, body: string): Promise<string | null> {
+  const phoneId = process.env.WHATSAPP_PHONE_ID
+  const token = process.env.WHATSAPP_ACCESS_TOKEN
+  if (!phoneId || !token) return null
+  const res = await fetch(`https://graph.facebook.com/v21.0/${phoneId}/messages`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ messaging_product: 'whatsapp', to, type: 'text', text: { body } }),
+  })
+  const d = (await res.json()) as { messages?: { id: string }[] }
+  return res.ok ? (d.messages?.[0]?.id ?? null) : null
+}
+
+// Bu müvekkilin son yazışmasını bağlam alıp AI yanıtı üret
+async function aiReply(supabase: SupabaseClient, clientId: string): Promise<string | null> {
+  if (!process.env.ANTHROPIC_API_KEY) return null
+  const { data: history } = await supabase
+    .from('messages')
+    .select('direction, body, created_at')
+    .eq('client_id', clientId)
+    .eq('channel', 'whatsapp')
+    .order('created_at', { ascending: false })
+    .limit(8)
+  const msgs: Anthropic.MessageParam[] = (history ?? [])
+    .reverse()
+    .filter(m => m.body)
+    .map(m => ({ role: m.direction === 'inbound' ? 'user' : 'assistant', content: m.body as string }))
+  if (msgs.length === 0 || msgs[msgs.length - 1].role !== 'user') return null
+  try {
+    const client = new Anthropic()
+    const res = await client.messages.create({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 320,
+      system: BOT_SYSTEM,
+      messages: msgs,
+    })
+    const blk = res.content.find(b => b.type === 'text') as { text: string } | undefined
+    return blk?.text?.trim() || null
+  } catch {
+    return null
+  }
 }
 
 // 1) Doğrulama (Meta panelinde webhook kurarken çağrılır)
@@ -98,6 +155,27 @@ export async function POST(req: NextRequest) {
       status: 'delivered',
       received_at: new Date().toISOString(),
     })
+
+    // Otomatik AI yanıtı (env WHATSAPP_AUTOREPLY=ai ise) — sadece metin mesajlarına
+    if (process.env.WHATSAPP_AUTOREPLY === 'ai' && type === 'text') {
+      const reply = await aiReply(supabase, client.id as string)
+      if (reply) {
+        const sentId = await sendWaText(from, reply)
+        if (sentId) {
+          await supabase.from('messages').insert({
+            organization_id: client.organization_id,
+            client_id: client.id,
+            channel: 'whatsapp',
+            direction: 'outbound',
+            external_message_id: sentId,
+            to_address: `+${from}`,
+            body: reply,
+            status: 'sent',
+            sent_at: new Date().toISOString(),
+          })
+        }
+      }
+    }
   }
 
   return Response.json({ status: 'ok' })
