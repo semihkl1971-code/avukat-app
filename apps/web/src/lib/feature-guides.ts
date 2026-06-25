@@ -270,6 +270,33 @@ export const GUIDES: FeatureGuide[] = [
       { t: 'Koltuk limiti', d: 'Plana göre' },
     ],
   },
+  {
+    slug: 'whatsapp-bot',
+    name: 'WhatsApp Asistanı',
+    tag: 'YAPAY ZEKA BOT',
+    title: 'WhatsApp Yapay Zeka Asistanı',
+    color: '#1ec45f', color2: '#0d8b3d', icon: 'bot',
+    summary: 'Müvekkilleriniz WhatsApp\'tan yazınca yapay zeka asistanı anında, güvenli ve kibar yanıt verir — siz uyurken bile büronuz cevap verir.',
+    whatIs: 'WhatsApp Asistanı, büronuzun WhatsApp hattına gelen müvekkil mesajlarına otomatik yanıt veren bir yapay zeka botudur. Müvekkili karşılar, bilgi toplar (ad, konu, dosya no), randevuya yönlendirir ve genel soruları yanıtlar. Bağlayıcı hukuki görüş vermez; spesifik konularda "avukatımız en kısa sürede dönecek" der. Bot tonunu, çalışma saatlerini, çalışma alanlarını ve anahtar kelime yanıtlarını panelden özelleştirirsiniz. Bir avukat sohbete yanıt yazınca bot o müvekkille bir süre susar (devralma).',
+    howItWorks: [
+      { t: 'Mesaj gelir', d: 'Müvekkil WhatsApp\'tan yazar; sistem mesajı müvekkil kartıyla eşleştirir ve panele kaydeder.' },
+      { t: 'Anahtar kelime kontrolü', d: 'Mesaj "randevu", "ücret" gibi tanımlı bir kelime içeriyorsa, AI yerine hazır yanıt anında gönderilir.' },
+      { t: 'Yapay zeka yanıtı', d: 'Aksi halde yapay zeka, büronuzun bilgileriyle (ad, saatler, alanlar) kısa ve güvenli bir yanıt üretir.' },
+      { t: 'Avukat devralır', d: 'Bir avukat sohbete elle yanıt yazarsa bot o müvekkilde devre dışı kalır; konuşmayı insan sürdürür.' },
+    ],
+    howToUse: [
+      { t: 'Botu açın', d: 'Panel → WhatsApp Bot → "Otomatik yanıt" anahtarını açın.' },
+      { t: 'Büronuzu tanıtın', d: 'Büro adı, çalışma saatleri ve çalışma alanlarını girin — bot bunları kullanır.' },
+      { t: 'Anahtar kelime ekleyin', d: 'Örn. "randevu" → hazır randevu yanıtı; "ücret" → ücret bilgisi mesajı.' },
+      { t: 'Yayında', d: 'Artık müvekkil yazınca bot anında yanıtlar; siz panelden tüm yazışmayı görür, istediğinizde devralırsınız.' },
+    ],
+    highlights: [
+      { t: '7/24 yanıt', d: 'Mesai dışı bile' },
+      { t: 'Güvenli', d: 'Bağlayıcı tavsiye yok' },
+      { t: 'Özelleştirilebilir', d: 'Ton + saat + alan' },
+      { t: 'Avukat devralma', d: 'İnsan öncelikli' },
+    ],
+  },
 ]
 
 export const GUIDE_MAP: Record<string, FeatureGuide> = Object.fromEntries(GUIDES.map(g => [g.slug, g]))

@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic'
 import { LandingStyles, LandingReveal, HeroBackdrop, QuickFeatures, GlobeSection, PeopleSection, CourtroomSection, FeatureVisual } from '@/components/landing/Animations'
 
 import { GUIDES } from '@/lib/feature-guides'
+import WhatsAppDemo from '@/components/landing/WhatsAppDemo'
 
 // WebGL 3D hero sahnesi — yalnızca tarayıcıda (three.js)
 const Hero3D = dynamic(() => import('@/components/landing/Hero3D'), { ssr: false })
@@ -355,6 +356,38 @@ export default function LandingPage() {
       <GlobeSection />
       <PeopleSection />
       <CourtroomSection />
+
+      {/* ═══════════ WHATSAPP ASİSTANI (3D animasyonlu) ═══════════ */}
+      <section id="whatsapp-bot" style={{ padding: 'clamp(70px,9vw,110px) 24px', borderTop: '1px solid rgba(255,255,255,0.05)', background: 'radial-gradient(800px 460px at 80% 30%, rgba(30,196,95,0.1), transparent 70%)' }}>
+        <div className="feature-row" style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: '1.05fr 0.95fr', gap: 'clamp(32px,6vw,72px)', alignItems: 'center', width: '100%' }}>
+          <div className="la-stagger">
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 12, fontWeight: 700, color: '#1ec45f', letterSpacing: '1.5px', marginBottom: 16 }}>🤖 YAPAY ZEKA BOT</div>
+            <h2 style={{ fontSize: 'clamp(26px,4vw,40px)', fontWeight: 800, letterSpacing: '-1px', margin: '0 0 16px', color: '#f1f5f9', lineHeight: 1.14 }}>WhatsApp&apos;ta <span style={{ background: 'linear-gradient(135deg,#1ec45f,#22d3ee)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>otomatik asistan</span></h2>
+            <p style={{ color: '#aeb6c6', lineHeight: 1.75, fontSize: 'clamp(15px,1.8vw,17px)', margin: '0 0 24px', fontWeight: 500 }}>
+              Müvekkilleriniz WhatsApp&apos;tan yazınca yapay zeka <strong style={{ color: '#e8eaf0' }}>anında, kibar ve güvenli</strong> yanıt verir; bilgi toplar, randevuya yönlendirir. Siz uyurken bile büronuz cevap verir — bağlayıcı hukuki görüş vermeden, gerektiğinde &quot;avukatımız dönecek&quot; diyerek.
+            </p>
+            <div className="la-stagger" style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 28 }}>
+              {[
+                ['💬', 'Nasıl çalışır', 'Mesaj gelir → anahtar kelime ya da yapay zeka → anında yanıt; her şey panele işlenir.'],
+                ['⚙️', 'Nasıl kullanılır', 'Panel → WhatsApp Bot → aç, büro adı/saat/alanları gir, anahtar kelime ekle. Bu kadar.'],
+                ['🧑‍⚖️', 'Avukat önceliği', 'Bir avukat yanıt yazınca bot o sohbette susar; konuşmayı insan sürdürür.'],
+              ].map(([ic, t, d]) => (
+                <div key={t} className="la-fcard" style={{ alignItems: 'flex-start' }}>
+                  <span className="la-fic" style={{ background: 'linear-gradient(135deg,#0d8b3d,#1ec45f)' }}>{ic}</span>
+                  <span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    <strong style={{ color: '#e8eaf0', fontSize: 14.5 }}>{t}</strong>
+                    <span style={{ color: '#8892a4', fontSize: 13, fontWeight: 400, lineHeight: 1.5 }}>{d}</span>
+                  </span>
+                </div>
+              ))}
+            </div>
+            <Link href="/ozellik/whatsapp-bot" className="la-btn-anim" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '12px 24px', borderRadius: 12, border: '1px solid rgba(30,196,95,0.4)', color: '#1ec45f', textDecoration: 'none', fontSize: 15, fontWeight: 700, background: 'rgba(30,196,95,0.1)' }}>Detaylı anlatım — nasıl çalışır →</Link>
+          </div>
+          <div className="la-reveal d1">
+            <WhatsAppDemo />
+          </div>
+        </div>
+      </section>
 
       {/* ═══════════ BÖLÜM 5 — ANLATIM VİDEOLARI ═══════════ */}
       <section id="videos" style={{ padding: '90px 24px', background: 'linear-gradient(180deg,#07090f,#0d0b1a,#07090f)' }}>
